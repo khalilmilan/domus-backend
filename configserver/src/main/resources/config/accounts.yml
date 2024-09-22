@@ -1,0 +1,11 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to Domus accounts related local APIs "
+  contactDetails:
+    name: "khalil yousfi - Developer"
+    email: "khalil.yousfi@esprit.tn"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345

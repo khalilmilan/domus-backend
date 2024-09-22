@@ -1,0 +1,59 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: "microservice-commentaire"
+  profiles:
+    active: "prod"
+  datasource:
+    url: "jdbc:mysql://localhost:3306/domusEvent"
+    driverClassName: com.mysql.jdbc.Driver
+    username: "root"
+    password: ''
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+endpoints:
+  shutdown:
+    enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+info:
+  app:
+    name: "microservice-commentaire"
+    description: "DOMUS microservice-commentaire Application"
+    version: "1.0.0"
+
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
