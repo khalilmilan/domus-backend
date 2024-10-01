@@ -18,6 +18,6 @@ public class GroupeDTO {
     private String label;
     private Integer status;
     private Long idUser;
-    private UserDTO user;
-    private List<UserDTO> membres;
+    private SimpleUserDTO user;
+    private List<SimpleUserDTO> membres;
 }

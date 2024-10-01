@@ -85,7 +85,7 @@ public class GroupeController {
         }
     }
 
-    @PostMapping("/delete_membre/{idGroupe}/{idUser}")
+    @DeleteMapping("/delete_membre/{idGroupe}/{idUser}")
     public ResponseEntity<?> deleteByGroupeUser(@PathVariable("idGroupe") Long idGroupe,@PathVariable("idUser") Long idUser) throws GroupeException{
         try{
             groupeService.removeMembre(idGroupe,idUser);

@@ -1,7 +1,7 @@
 package com.mdiscussion.mdiscussion.mapper;
 
 import com.mdiscussion.mdiscussion.dto.DiscussionDTO;
-import com.mdiscussion.mdiscussion.dto.UserDTO;
+import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import com.mdiscussion.mdiscussion.model.Discussion;
 
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ public class DiscussionMapper {
                 discussion.getIdUser2(),
                 discussion.getIdGroupe(),
                 discussion.getStatus(),
-                new UserDTO(),
-                new UserDTO(),
+                new SimpleUserDTO(),
+                new SimpleUserDTO(),
                 new ArrayList<>()
         );
         return discussionDto;

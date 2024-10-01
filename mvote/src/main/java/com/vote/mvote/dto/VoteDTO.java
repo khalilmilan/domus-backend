@@ -10,11 +10,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoteDTO {
-
     private Long idVote;
     private String title;
     private Integer status;
     private Long idUser;
     private Long idSurvey;
     private Long idSurveyValue;
+    private SimpleUserDTO user;
+    private SurveyValueDTO surveyValuedto;
 }

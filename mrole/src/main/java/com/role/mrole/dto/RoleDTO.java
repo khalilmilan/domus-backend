@@ -12,18 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoleDTO {
-
     private Long idRole;
-
     private String title;
-
     private String description;
-
     private Integer status;
     private Long idUser;
-    private UserDTO user;
-
+    private SimpleUserDTO user;
     private List<PermissionDTO> permissions;
-
 
 }

@@ -1,7 +1,7 @@
 package com.commentaire.mcommentaire.commentaireMapper;
 
 import com.commentaire.mcommentaire.dto.CommentaireDTO;
-import com.commentaire.mcommentaire.dto.UserDTO;
+import com.commentaire.mcommentaire.dto.SimpleUserDTO;
 import com.commentaire.mcommentaire.model.Commentaire;
 
 public class CommentaireMapper {
@@ -14,7 +14,7 @@ public class CommentaireMapper {
                 commentaire.getStatus(),
                 commentaire.getIdUser(),
                 commentaire.getIdForum(),
-                new UserDTO()
+                new SimpleUserDTO()
         );
         return commentaireDto;
     }

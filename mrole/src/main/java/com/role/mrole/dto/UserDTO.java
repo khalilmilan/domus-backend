@@ -25,6 +25,4 @@ public class UserDTO {
         private String phoneNumber;
         private Integer status;
         private Long idRank;
-
-
 }

@@ -1,12 +1,12 @@
 package com.mrole_permission.mrole_permission.service;
 
+import com.mrole_permission.mrole_permission.client.PermissionFeignClient;
 import com.mrole_permission.mrole_permission.dto.PermissionDTO;
 import com.mrole_permission.mrole_permission.dto.RolePermissionDTO;
 import com.mrole_permission.mrole_permission.exception.RolePermissionException;
 import com.mrole_permission.mrole_permission.mapper.RolePermissionMapper;
 import com.mrole_permission.mrole_permission.model.RolePermission;
 import com.mrole_permission.mrole_permission.repository.RolePermissionRepository;
-import com.mrole_permission.mrole_permission.service.client.PermissionFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +90,7 @@ public class RolePermissionImple implements RolePermissionService{
         List<PermissionDTO> permissions = new ArrayList<>();
         if (rolePermissions.size() > 0) {
             for (RolePermission rolePermission : rolePermissions) {
-                PermissionDTO userDto =  permissionFeignClient.getPermission(rolePermission.getIdPermission()).getBody();
+                PermissionDTO userDto =  permissionFeignClient.getPermission(rolePermission.getIdPermission());
                 permissions.add(userDto);
             }
             return permissions;

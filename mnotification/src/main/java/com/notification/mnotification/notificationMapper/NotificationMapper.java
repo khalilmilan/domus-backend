@@ -1,7 +1,7 @@
 package com.notification.mnotification.notificationMapper;
 
 import com.notification.mnotification.dto.NotificationDTO;
-import com.notification.mnotification.dto.UserDTO;
+import com.notification.mnotification.dto.SimpleUserDTO;
 import com.notification.mnotification.model.Notification;
 
 public class NotificationMapper {
@@ -16,8 +16,8 @@ public class NotificationMapper {
                 notification.getStatus(),
                 notification.getIdSender(),
                 notification.getIdReciver(),
-                new UserDTO(),
-                new UserDTO()
+                new SimpleUserDTO(),
+                new SimpleUserDTO()
         );
         return notificationDto;
     }

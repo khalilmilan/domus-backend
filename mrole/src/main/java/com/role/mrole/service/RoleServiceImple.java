@@ -1,15 +1,12 @@
 package com.role.mrole.service;
 
-import com.role.mrole.dto.PermissionDTO;
-import com.role.mrole.dto.RoleDTO;
-import com.role.mrole.dto.RolePermissionDTO;
-import com.role.mrole.dto.UserDTO;
+import com.role.mrole.client.RolePermissionFeignClient;
+import com.role.mrole.client.UserServiceClient;
+import com.role.mrole.dto.*;
 import com.role.mrole.exception.RoleException;
 import com.role.mrole.model.Role;
 import com.role.mrole.repository.RoleRepository;
 import com.role.mrole.roleMapper.RoleMapper;
-import com.role.mrole.service.client.RolePermissionFeignClient;
-import com.role.mrole.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +20,7 @@ import java.util.Optional;
 public class RoleServiceImple implements RoleService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleServiceImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private RolePermissionFeignClient rolePermissionFeignClient;
     private RoleRepository roleRepository;
     @Override
@@ -41,7 +38,7 @@ public class RoleServiceImple implements RoleService{
         if (roles.size() > 0) {
             for (Role role : roles) {
                 RoleDTO dto =RoleMapper.mapToRoleDto(role);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
                 rolesDto.add(dto);
             }
@@ -68,9 +65,9 @@ public class RoleServiceImple implements RoleService{
             throw new RoleException(RoleException.NotFoundException(idRole));
         }else {
             RoleDTO dto =RoleMapper.mapToRoleDto(roleOptional.get());
-            UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
-            List<PermissionDTO> permissions =  rolePermissionFeignClient.getPermissionByRole(dto.getIdRole()).getBody();
+            List<PermissionDTO> permissions =  rolePermissionFeignClient.getPermissionByRole(dto.getIdRole());
             dto.setPermissions(permissions);
             return dto;
         }
@@ -110,11 +107,11 @@ public class RoleServiceImple implements RoleService{
     }
 
     @Override
-    public String removePermission(Long idRole, Long idPermission) throws RoleException {
+    public void removePermission(Long idRole, Long idPermission) throws RoleException {
         Optional<Role> roleWithId = roleRepository.findById(idRole);
         if(roleWithId.isPresent()) {
 
-            return rolePermissionFeignClient.deleteByGroupeAndUser(idRole,idPermission).getBody();
+             rolePermissionFeignClient.deleteByGroupeAndUser(idRole,idPermission);
         }else{
             throw new RoleException(RoleException.NotFoundException(idRole));
         }

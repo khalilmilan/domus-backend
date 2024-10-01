@@ -16,11 +16,8 @@ public class Permission extends BaseEntity{
     @Id
     @GeneratedValue
     private Long idPermission;
-
     private String title;
-
     private String description;
-
     private Integer status;
     private Long idUser;
 

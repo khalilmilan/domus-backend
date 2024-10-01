@@ -18,6 +18,6 @@ public class TicketDTO {
     private Long idUser;
     private Long idProject;
 
-    private UserDTO user;
+    private SimpleUserDTO user;
     private ProjectDTO project;
 }

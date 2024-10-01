@@ -1,16 +1,13 @@
 package com.mevent.mevent.service;
 
-import com.mevent.mevent.dto.EventDTO;
-import com.mevent.mevent.dto.EventDetailsDTO;
-import com.mevent.mevent.dto.ForumDTO;
-import com.mevent.mevent.dto.UserDTO;
+import com.mevent.mevent.client.UserServiceClient;
+import com.mevent.mevent.dto.*;
 import com.mevent.mevent.eventMapper.EventMapper;
 import com.mevent.mevent.exception.EventException;
 import com.mevent.mevent.model.Event;
 import com.mevent.mevent.repository.EventRepository;
-import com.mevent.mevent.service.client.EventUserFeignClient;
-import com.mevent.mevent.service.client.ForumFeignClient;
-import com.mevent.mevent.service.client.UserFeignClient;
+import com.mevent.mevent.client.EventUserFeignClient;
+import com.mevent.mevent.client.ForumFeignClient;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -23,7 +20,7 @@ import java.util.Optional;
 public class UserServiceImp implements IUserService{
 
     private EventRepository eventRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private EventUserFeignClient eventUserFeignClient;
     private ForumFeignClient forumFeignClient;
     @Override
@@ -34,11 +31,11 @@ public class UserServiceImp implements IUserService{
         }else {
             EventDTO eventDto = EventMapper.mapToEventDto(eventOptional.get());
             EventDetailsDTO  eventDetailsDTO = EventMapper.mapToEventDetailsDto(eventDto);
-            UserDTO userDto = userFeignClient.getUser(eventDto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(eventDto.getIdUser());
             eventDetailsDTO.setUser(userDto);
-            List<UserDTO> participants =  eventUserFeignClient.getAllEventsUser(eventDetailsDTO.getIdEvent()).getBody();
+            List<SimpleUserDTO> participants =  eventUserFeignClient.getAllEventsUser(eventDetailsDTO.getIdEvent());
             eventDetailsDTO.setParticipants(participants);
-            List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(eventDetailsDTO.getIdEvent()).getBody();
+            List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(eventDetailsDTO.getIdEvent());
             eventDetailsDTO.setForums(forums);
             return eventDetailsDTO;
         }

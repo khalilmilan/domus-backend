@@ -1,5 +1,8 @@
 package com.muser.muser.dto;
 
+import com.muser.muser.model.enums.UserGender;
+import com.muser.muser.model.enums.UserStatus;
+import com.muser.muser.model.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +22,13 @@ public class UserDTO {
     private String password;
     private String email;
     private String adresse ;
-    private  String  gender;
+    private UserGender gender;
     private  Long  idGroupe;
     private Date birthDate;
     private String phoneNumber;
-    private Integer status;
+    private UserStatus status;
+    private UserType userType;
     private Long idRank;
+    private Long idRole;
+    private RoleDTO role;
 }

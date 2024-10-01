@@ -17,8 +17,8 @@ public class DiscussionDTO {
     private Long idUser2;
     private Long idGroupe;
     private Integer status;
-    private UserDTO user1;
-    private UserDTO user2;
+    private SimpleUserDTO user1;
+    private SimpleUserDTO user2;
     private List<MessageDTO> messages;
 
 }

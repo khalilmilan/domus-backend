@@ -1,7 +1,7 @@
 package com.mproject.mproject.mapper;
 
 import com.mproject.mproject.dto.ProjectDTO;
-import com.mproject.mproject.dto.UserDTO;
+import com.mproject.mproject.dto.SimpleUserDTO;
 import com.mproject.mproject.model.Project;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class ProjectMapper {
                 project.getDescription(),
                 project.getStatus(),
                 project.getIdUser(),
-                new UserDTO(),
+                new SimpleUserDTO(),
                 new ArrayList<>(),
                 new ArrayList<>()
         );

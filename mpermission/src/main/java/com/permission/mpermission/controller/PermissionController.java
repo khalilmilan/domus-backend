@@ -1,7 +1,6 @@
 package com.permission.mpermission.controller;
 
 import com.permission.mpermission.dto.PermissionDTO;
-import com.permission.mpermission.dto.UserDTO;
 import com.permission.mpermission.exception.PermissionException;
 import com.permission.mpermission.model.Permission;
 import com.permission.mpermission.service.PermissionService;
@@ -35,11 +34,11 @@ public class PermissionController {
     }
 
     @GetMapping("/{idPermission}")
-    public ResponseEntity<PermissionDTO> getPermission(@PathVariable("idPermission") Long idPermission) throws PermissionException {
+    public PermissionDTO getPermission(@PathVariable("idPermission") Long idPermission) throws PermissionException {
         try {
-            return new ResponseEntity<>(permissionService.getPermission(idPermission), HttpStatus.OK);
+            return permissionService.getPermission(idPermission);
         } catch (PermissionException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new PermissionDTO());
+            return new PermissionDTO();
         }
     }
 
@@ -70,6 +69,4 @@ public class PermissionController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-
 }

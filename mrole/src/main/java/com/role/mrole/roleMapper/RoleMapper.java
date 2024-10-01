@@ -1,6 +1,7 @@
 package com.role.mrole.roleMapper;
 
 import com.role.mrole.dto.RoleDTO;
+import com.role.mrole.dto.SimpleUserDTO;
 import com.role.mrole.dto.UserDTO;
 import com.role.mrole.model.Role;
 
@@ -15,7 +16,7 @@ public class RoleMapper {
                 role.getDescription(),
                 role.getStatus(),
                 role.getIdUser(),
-                new UserDTO(),
+                new SimpleUserDTO(),
                 new ArrayList<>()
 
         );

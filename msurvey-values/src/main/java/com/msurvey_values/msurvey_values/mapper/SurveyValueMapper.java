@@ -1,7 +1,7 @@
 package com.msurvey_values.msurvey_values.mapper;
 
+import com.msurvey_values.msurvey_values.dto.SimpleUserDTO;
 import com.msurvey_values.msurvey_values.dto.SurveyValueDTO;
-import com.msurvey_values.msurvey_values.dto.UserDTO;
 import com.msurvey_values.msurvey_values.model.SurveyValue;
 
 public class SurveyValueMapper {
@@ -13,7 +13,7 @@ public class SurveyValueMapper {
                 surveyValue.getStatus(),
                 surveyValue.getIdSurvey(),
                 surveyValue.getIdUser(),
-                new UserDTO()
+                new SimpleUserDTO()
         );
         return surveryValueDto;
     }

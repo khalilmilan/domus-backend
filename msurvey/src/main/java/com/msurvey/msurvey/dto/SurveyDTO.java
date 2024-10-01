@@ -17,6 +17,7 @@ public class SurveyDTO {
     private String description;
     private Integer status;
     private Long idUser;
-    private UserDTO user;
+    private SimpleUserDTO user;
     private List<SurveyValueDTO> values;
+    private List<VoteDTO> votes;
 }

@@ -1,16 +1,13 @@
 package com.mevent.mevent.service;
 
-import com.mevent.mevent.dto.EventUserDTO;
-import com.mevent.mevent.dto.ForumDTO;
-import com.mevent.mevent.dto.UserDTO;
+import com.mevent.mevent.client.UserServiceClient;
+import com.mevent.mevent.dto.*;
 import com.mevent.mevent.eventMapper.EventMapper;
 import com.mevent.mevent.repository.EventRepository;
-import com.mevent.mevent.dto.EventDTO;
 import com.mevent.mevent.exception.EventException;
 import com.mevent.mevent.model.Event;
-import com.mevent.mevent.service.client.EventUserFeignClient;
-import com.mevent.mevent.service.client.ForumFeignClient;
-import com.mevent.mevent.service.client.UserFeignClient;
+import com.mevent.mevent.client.EventUserFeignClient;
+import com.mevent.mevent.client.ForumFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class EventServiceImple implements EventService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private EventRepository eventRepository;
     private EventUserFeignClient eventUserFeignClient;
     private ForumFeignClient forumFeignClient;
@@ -45,11 +42,11 @@ public class EventServiceImple implements EventService{
         if (events.size() > 0) {
             for (Event event : events) {
                 EventDTO dto = EventMapper.mapToEventDto(event);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
-                List<UserDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent()).getBody();
+                List<SimpleUserDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
                 dto.setParticipants(participants);
-                List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent()).getBody();
+                List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
                 dto.setForums(forums);
                 eventDto.add(dto);
             }
@@ -75,9 +72,13 @@ public class EventServiceImple implements EventService{
         if (!eventOptional.isPresent()) {
             throw new EventException(EventException.NotFoundException(idEvent));
         }else {
-            EventDTO dto =EventMapper.mapToEventDto(eventOptional.get());
-            List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent()).getBody();
+            EventDTO dto = EventMapper.mapToEventDto(eventOptional.get());
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+            dto.setUser(userDto);
+            List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
             dto.setForums(forums);
+            List<SimpleUserDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
+            dto.setParticipants(participants);
             return dto;
         }
     }
@@ -109,7 +110,7 @@ public class EventServiceImple implements EventService{
                     idUser,
                     1
             );
-            EventUserDTO dto =   eventUserFeignClient.saveEventUser(eventUserDto).getBody();
+            EventUserDTO dto = eventUserFeignClient.saveEventUser(eventUserDto);
         }
         else
         {
@@ -123,7 +124,7 @@ public class EventServiceImple implements EventService{
         if(eventWithId.isPresent())
         {
 
-            eventUserFeignClient.deleteByEventAndUser(idEvent,idUser).getBody();
+            eventUserFeignClient.deleteByEventAndUser(idEvent,idUser);
         }
         else
         {

@@ -1,12 +1,12 @@
 package com.permission.mpermission.service;
 
+import com.permission.mpermission.client.UserServiceClient;
 import com.permission.mpermission.dto.PermissionDTO;
-import com.permission.mpermission.dto.UserDTO;
+import com.permission.mpermission.dto.SimpleUserDTO;
 import com.permission.mpermission.exception.PermissionException;
 import com.permission.mpermission.model.Permission;
 import com.permission.mpermission.permissionMapper.PermissionMapper;
 import com.permission.mpermission.repository.PermissionRepository;
-import com.permission.mpermission.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class PermissionServiceImple implements PermissionService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionServiceImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private PermissionRepository permissionRepository;
     @Override
     public PermissionDTO savePermission(PermissionDTO permissionDto) {
@@ -63,7 +63,7 @@ public class PermissionServiceImple implements PermissionService{
             throw new PermissionException(PermissionException.NotFoundException(idPermission));
         }else {
             PermissionDTO dto = PermissionMapper.mapToPermissionDto(permissionOptional.get());
-            UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
             return dto;
         }

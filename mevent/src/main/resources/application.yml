@@ -3,6 +3,7 @@ spring:
     name: "microservice-event"
   profiles:
     active: "prod"
+
   config:
     import: "optional:configserver:http://localhost:8071/"
 
@@ -44,9 +45,18 @@ eureka:
 
 info:
   app:
-    name: "microservice-event"
-    description: "DOMUS user Application"
+    name: "microservice-user-device"
+    description: "DOMUS role Application"
     version: "1.0.0"
 
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.access.ExceptionTranslationFilter: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+    org.springframework.security.web.authentication: DEBUG
+    org.springframework.security.web.access.intercept.FilterSecurityInterceptor: DEBUG
+    org.springframework.security.access.intercept.AbstractSecurityInterceptor: DEBUG

@@ -33,11 +33,11 @@ public class EventController {
     }
 
     @GetMapping("/{idEvent}")
-    public ResponseEntity<EventDTO> getEvent(@PathVariable("idEvent") Long idEvent) throws EventException {
+    public EventDTO getEvent(@PathVariable("idEvent") Long idEvent) throws EventException {
         try {
-            return new ResponseEntity<>(eventService.getEvent(idEvent), HttpStatus.OK);
+            return eventService.getEvent(idEvent);
         } catch (EventException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new EventDTO());
+            return new EventDTO();
         }
     }
 

@@ -1,12 +1,12 @@
 package com.notification.mnotification.service;
 
+import com.notification.mnotification.client.UserServiceClient;
 import com.notification.mnotification.dto.NotificationDTO;
-import com.notification.mnotification.dto.UserDTO;
+import com.notification.mnotification.dto.SimpleUserDTO;
 import com.notification.mnotification.exception.NotificationException;
 import com.notification.mnotification.model.Notification;
 import com.notification.mnotification.notificationMapper.NotificationMapper;
 import com.notification.mnotification.repository.NotificationRepository;
-import com.notification.mnotification.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class NotificationServiceImple implements NotificationService{
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImple.class);
 
     private NotificationRepository notificationRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     @Override
     public NotificationDTO saveNotification(NotificationDTO notificationDto) {
         Notification notification = NotificationMapper.mapToNotification(notificationDto);
@@ -40,9 +40,9 @@ public class NotificationServiceImple implements NotificationService{
         if (notifications.size() > 0) {
             for (Notification notification : notifications) {
                 NotificationDTO dto =NotificationMapper.mapToNotificationDto(notification);
-                UserDTO sender = userFeignClient.getUser(dto.getIdSender()).getBody();
+                SimpleUserDTO sender = userFeignClient.getSimpleUser(dto.getIdSender());
                 dto.setSender(sender);
-                UserDTO reciver = userFeignClient.getUser(dto.getIdReciver()).getBody();
+                SimpleUserDTO reciver = userFeignClient.getSimpleUser(dto.getIdReciver());
                 dto.setReciver(reciver);
                 notificationDto.add(dto);
             }
@@ -69,9 +69,9 @@ public class NotificationServiceImple implements NotificationService{
             throw new NotificationException(NotificationException.NotFoundException(idNotification));
         }else {
             NotificationDTO dto = NotificationMapper.mapToNotificationDto(notificationOptional.get());
-            UserDTO sender = userFeignClient.getUser(dto.getIdSender()).getBody();
+            SimpleUserDTO sender = userFeignClient.getSimpleUser(dto.getIdSender());
             dto.setSender(sender);
-            UserDTO reciver = userFeignClient.getUser(dto.getIdReciver()).getBody();
+            SimpleUserDTO reciver = userFeignClient.getSimpleUser(dto.getIdReciver());
             dto.setReciver(reciver);
             return dto;
         }
@@ -102,7 +102,7 @@ public class NotificationServiceImple implements NotificationService{
         if (notifications.size() > 0) {
             for (Notification notification : notifications) {
                 NotificationDTO dto =NotificationMapper.mapToNotificationDto(notification);
-                UserDTO reciver = userFeignClient.getUser(dto.getIdReciver()).getBody();
+                SimpleUserDTO reciver = userFeignClient.getSimpleUser(dto.getIdReciver());
                 dto.setReciver(reciver);
                 notificationDto.add(dto);
             }
@@ -119,7 +119,7 @@ public class NotificationServiceImple implements NotificationService{
         if (notifications.size() > 0) {
             for (Notification notification : notifications) {
                 NotificationDTO dto =NotificationMapper.mapToNotificationDto(notification);
-                UserDTO sender = userFeignClient.getUser(dto.getIdSender()).getBody();
+                SimpleUserDTO sender = userFeignClient.getSimpleUser(dto.getIdSender());
                 dto.setSender(sender);
                 notificationDto.add(dto);
             }

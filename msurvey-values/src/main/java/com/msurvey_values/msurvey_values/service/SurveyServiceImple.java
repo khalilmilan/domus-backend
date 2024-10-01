@@ -1,12 +1,12 @@
 package com.msurvey_values.msurvey_values.service;
 
+import com.msurvey_values.msurvey_values.client.UserServiceClient;
+import com.msurvey_values.msurvey_values.dto.SimpleUserDTO;
 import com.msurvey_values.msurvey_values.dto.SurveyValueDTO;
-import com.msurvey_values.msurvey_values.dto.UserDTO;
 import com.msurvey_values.msurvey_values.exception.SurveyValueException;
 import com.msurvey_values.msurvey_values.mapper.SurveyValueMapper;
 import com.msurvey_values.msurvey_values.model.SurveyValue;
 import com.msurvey_values.msurvey_values.repository.SurveyValueRepository;
-import com.msurvey_values.msurvey_values.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SurveyServiceImple implements SurveyValueService{
     private static final Logger LOGGER = LoggerFactory.getLogger(SurveyServiceImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private SurveyValueRepository surveyValueRepository;
     @Override
     public SurveyValueDTO saveSurveyValue(SurveyValueDTO surveyValueDto) {
@@ -38,7 +38,7 @@ public class SurveyServiceImple implements SurveyValueService{
         if (surveyValues.size() > 0) {
             for (SurveyValue surveyValue : surveyValues) {
                 SurveyValueDTO dto = SurveyValueMapper.mapToSurveyValueDto(surveyValue);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
                 surveyValuesDto.add(dto);
             }
@@ -65,7 +65,7 @@ public class SurveyServiceImple implements SurveyValueService{
             throw new SurveyValueException(SurveyValueException.NotFoundException(idSurveyValue));
         }else {
             SurveyValueDTO dto =SurveyValueMapper.mapToSurveyValueDto(surveyValueOptional.get());
-            UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
             return dto;
         }
@@ -96,7 +96,7 @@ public class SurveyServiceImple implements SurveyValueService{
         if (surveyvalues.size() > 0) {
             for (SurveyValue surveyValue : surveyvalues) {
                 SurveyValueDTO dto = SurveyValueMapper.mapToSurveyValueDto(surveyValue);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
                 surveysDto.add(dto);
             }
@@ -113,7 +113,7 @@ public class SurveyServiceImple implements SurveyValueService{
         if (surveyValues.size() > 0) {
             for (SurveyValue surveyValue : surveyValues) {
                 SurveyValueDTO dto = SurveyValueMapper.mapToSurveyValueDto(surveyValue);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
                 surveysDto.add(dto);
             }

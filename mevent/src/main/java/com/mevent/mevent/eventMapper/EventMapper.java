@@ -2,6 +2,7 @@ package com.mevent.mevent.eventMapper;
 
 import com.mevent.mevent.dto.EventDTO;
 import com.mevent.mevent.dto.EventDetailsDTO;
+import com.mevent.mevent.dto.SimpleUserDTO;
 import com.mevent.mevent.dto.UserDTO;
 import com.mevent.mevent.model.Event;
 
@@ -17,7 +18,7 @@ public class EventMapper {
                 event.getIdUser(),
                 event.getDate(),
                 event.getStatus(),
-                new UserDTO(),
+                new SimpleUserDTO(),
                 new ArrayList<>(),
                 new ArrayList<>()
 
@@ -34,7 +35,7 @@ public class EventMapper {
                 eventDto.getDate(),
                 eventDto.getStatus(),
                 eventDto.getUser(),
-               eventDto.getParticipants(),
+                eventDto.getParticipants(),
                 eventDto.getForums()
         );
         return eventDetailsDto;

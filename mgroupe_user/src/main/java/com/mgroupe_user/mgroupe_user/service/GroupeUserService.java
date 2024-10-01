@@ -2,7 +2,7 @@ package com.mgroupe_user.mgroupe_user.service;
 
 
 import com.mgroupe_user.mgroupe_user.dto.GroupeUserDTO;
-import com.mgroupe_user.mgroupe_user.dto.UserDTO;
+import com.mgroupe_user.mgroupe_user.dto.SimpleUserDTO;
 import com.mgroupe_user.mgroupe_user.exception.GroupeUserException;
 import com.mgroupe_user.mgroupe_user.model.GroupeUser;
 
@@ -20,6 +20,6 @@ public interface GroupeUserService {
 
     public void updateGroupeUser(Long id, GroupeUser groupe) throws GroupeUserException;
 
-    public List<UserDTO> getGroupeUserByGroupe(Long idGroupe);
+    public List<SimpleUserDTO> getGroupeUserByGroupe(Long idGroupe);
     public void deleteGroupeUserByIdGroupeIdUser(Long idGroupe,Long idUser) throws GroupeUserException;
 }

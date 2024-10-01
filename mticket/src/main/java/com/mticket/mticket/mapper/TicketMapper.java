@@ -1,11 +1,9 @@
 package com.mticket.mticket.mapper;
 
 import com.mticket.mticket.dto.ProjectDTO;
+import com.mticket.mticket.dto.SimpleUserDTO;
 import com.mticket.mticket.dto.TicketDTO;
-import com.mticket.mticket.dto.UserDTO;
 import com.mticket.mticket.model.Ticket;
-
-import java.util.ArrayList;
 
 public class TicketMapper {
 
@@ -18,9 +16,9 @@ public class TicketMapper {
                 ticket.getStatus(),
                 ticket.getIdUser(),
                 ticket.getIdProject(),
-                new UserDTO(),
-                new UserDTO()
-              //  new ProjectDTO()
+                new SimpleUserDTO(),
+                new SimpleUserDTO(),
+                new ProjectDTO()
         );
         return ticketDto;
     }

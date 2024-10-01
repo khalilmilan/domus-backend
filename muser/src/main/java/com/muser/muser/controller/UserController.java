@@ -1,5 +1,6 @@
 package com.muser.muser.controller;
 
+import com.muser.muser.dto.SimpleUserDTO;
 import com.muser.muser.dto.UserDTO;
 import com.muser.muser.exception.UserException;
 import com.muser.muser.model.User;
@@ -46,6 +47,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/simple_user/{idUser}")
+
+    public ResponseEntity<SimpleUserDTO> getSimpleUser(@PathVariable("idUser") Long idUser) throws UserException {
+
+        try {
+            return new ResponseEntity<>(userService.getSimpleUser(idUser), HttpStatus.OK);
+        } catch (UserException e) {
+            //  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND).body(new UserDTO());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SimpleUserDTO());
+        }
+    }
+
     @DeleteMapping("/{idUser}")
     public ResponseEntity<?> deleteById(@PathVariable("idUser") Long idUser) throws UserException{
         try{
@@ -71,6 +84,16 @@ public class UserController {
         }
         catch (UserException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/by_email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable("email") String email) throws UserException {
+        try {
+            return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
+        } catch (UserException e) {
+            //  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND).body(new UserDTO());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserDTO());
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.commentaire.mcommentaire.service;
 
+import com.commentaire.mcommentaire.client.UserServiceClient;
 import com.commentaire.mcommentaire.commentaireMapper.CommentaireMapper;
 import com.commentaire.mcommentaire.dto.CommentaireDTO;
-import com.commentaire.mcommentaire.dto.UserDTO;
+import com.commentaire.mcommentaire.dto.SimpleUserDTO;
 import com.commentaire.mcommentaire.exception.CommentaireException;
 import com.commentaire.mcommentaire.model.Commentaire;
 import com.commentaire.mcommentaire.repository.CommentaireRepository;
-import com.commentaire.mcommentaire.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class CommentaireServiceImple implements CommentaireService{
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentaireServiceImple.class);
 
     private CommentaireRepository commentaireRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     @Override
     public CommentaireDTO saveCommentaire(CommentaireDTO commentaireDto) {
         Commentaire commentaire = CommentaireMapper.mapToCommentaire(commentaireDto);
@@ -64,7 +64,7 @@ public class CommentaireServiceImple implements CommentaireService{
             throw new CommentaireException(CommentaireException.NotFoundException(idCommentaire));
         }else {
             CommentaireDTO dto = CommentaireMapper.mapToCommentaireDto(commentaireOptional.get());
-            UserDTO user = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO user = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(user);
             return dto;
         }
@@ -92,6 +92,8 @@ public class CommentaireServiceImple implements CommentaireService{
         if (commentaires.size() > 0) {
             for (Commentaire commentaire : commentaires) {
                 CommentaireDTO dto = CommentaireMapper.mapToCommentaireDto(commentaire);
+                SimpleUserDTO user = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(user);
                 commentaireDto.add(dto);
             }
             return commentaireDto;

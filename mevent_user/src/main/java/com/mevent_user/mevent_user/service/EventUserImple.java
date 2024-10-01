@@ -1,12 +1,14 @@
 package com.mevent_user.mevent_user.service;
 
+import com.mevent_user.mevent_user.client.UserServiceClient;
 import com.mevent_user.mevent_user.dto.EventUserDTO;
-import com.mevent_user.mevent_user.dto.UserDTO;
+import com.mevent_user.mevent_user.dto.SimpleUserDTO;
+
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.mapper.EventUserMapper;
 import com.mevent_user.mevent_user.model.EventUser;
 import com.mevent_user.mevent_user.repository.EventUserRepository;
-import com.mevent_user.mevent_user.service.client.UserFeignClient;
+
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,7 @@ import java.util.Optional;
 public class EventUserImple implements EventUserService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventUserImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private EventUserRepository eventUserRepository;
     @Override
     public EventUserDTO saveEvent(EventUserDTO eventUserDTO) {
@@ -86,19 +88,19 @@ public class EventUserImple implements EventUserService{
     }
 
     @Override
-    public List<UserDTO> getEventUserByEvent(Long idEvent) {
+    public List<SimpleUserDTO> getEventUserByEvent(Long idEvent) {
         List<EventUser> events = eventUserRepository.findEventUserByIdEvent(idEvent);;
-        List<UserDTO> userDtos = new ArrayList<>();
+        List<SimpleUserDTO> userDtos = new ArrayList<>();
         if (events.size() > 0) {
             for (EventUser event : events) {
                 EventUserDTO dto =EventUserMapper.mapToEventUserDto(event);
-                UserDTO userDto =  userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto =  userFeignClient.getSimpleUser(dto.getIdUser());
                 userDtos.add(userDto);
 
             }
             return userDtos;
         }else {
-            return new ArrayList<UserDTO>();
+            return new ArrayList<SimpleUserDTO>();
         }
     }
 

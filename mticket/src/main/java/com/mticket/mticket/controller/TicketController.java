@@ -24,9 +24,9 @@ public class TicketController {
         return "hi";
     }
     @PostMapping
-    public ResponseEntity<TicketDTO> saveTicket(@RequestBody TicketDTO ticketDto){
+    public TicketDTO saveTicket(@RequestBody TicketDTO ticketDto){
         TicketDTO savedTicket = ticketService.saveTicket(ticketDto);
-        return new ResponseEntity<>(savedTicket, HttpStatus.CREATED);
+        return savedTicket ;
     }
     @GetMapping("")
     public ResponseEntity<?> getAllTicket() {
@@ -35,11 +35,11 @@ public class TicketController {
     }
 
     @GetMapping("/{idTicket}")
-    public ResponseEntity<TicketDTO> getTicket(@PathVariable("idTicket") Long idTicket) throws TicketException {
+    public TicketDTO getTicket(@PathVariable("idTicket") Long idTicket) throws TicketException {
         try {
-            return new ResponseEntity<>(ticketService.getTicket(idTicket), HttpStatus.OK);
+            return ticketService.getTicket(idTicket);
         } catch (TicketException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new TicketDTO());
+            return new TicketDTO();
         }
     }
 
@@ -72,35 +72,33 @@ public class TicketController {
     }
 
     @GetMapping("/by_user/{idUser}")
-    public ResponseEntity<List<TicketDTO>> getTicketByUser(@PathVariable("idUser") Long idUser) {
+    public List<TicketDTO> getTicketByUser(@PathVariable("idUser") Long idUser) {
         List<TicketDTO> tickets = ticketService.getTicketByUser(idUser);
         if(tickets.size()>0){
-            return new ResponseEntity<>(tickets,  HttpStatus.OK );
+            return tickets ;
 
         }else{
-            return new ResponseEntity<>(new ArrayList<TicketDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<>();
 
         }
     }
     @GetMapping("/by_affected/{idAffectedTo}")
-    public ResponseEntity<List<TicketDTO>> getTicketByAffectedTo(@PathVariable("idAffectedTo") Long idAffectedTo) {
+    public List<TicketDTO> getTicketByAffectedTo(@PathVariable("idAffectedTo") Long idAffectedTo) {
         List<TicketDTO> tickets = ticketService.getTicketByAffectedTo(idAffectedTo);
         if(tickets.size()>0){
-            return new ResponseEntity<>(tickets,  HttpStatus.OK );
+            return tickets ;
 
         }else{
-            return new ResponseEntity<>(new ArrayList<TicketDTO>(), HttpStatus.NOT_FOUND);
-
+            return new ArrayList<>();
         }
     }
     @GetMapping("/by_project/{idProject}")
-    public ResponseEntity<List<TicketDTO>> getTicketByProject(@PathVariable("idProject") Long idProject) {
+    public List<TicketDTO> getTicketByProject(@PathVariable("idProject") Long idProject) {
         List<TicketDTO> tickets = ticketService.getTicketByProject(idProject);
         if(tickets.size()>0){
-            return new ResponseEntity<>(tickets,  HttpStatus.OK );
-
+            return tickets;
         }else{
-            return new ResponseEntity<>(new ArrayList<TicketDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<>();
 
         }
     }

@@ -16,7 +16,7 @@ public interface GroupeService {
 
     GroupeDTO getGroupe(Long idGroupe) throws GroupeException;
 
-    public void updateGroupe(Long idGroupe, Groupe groupe) throws GroupeException;
+    void updateGroupe(Long idGroupe, Groupe groupe) throws GroupeException;
 
     void addMembre(Long idGroupe, Long idUser) throws GroupeException;
 

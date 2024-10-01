@@ -1,12 +1,12 @@
 package com.message.mmessage.service;
 
+import com.message.mmessage.client.UserServiceClient;
 import com.message.mmessage.dto.MessageDTO;
-import com.message.mmessage.dto.UserDTO;
+import com.message.mmessage.dto.SimpleUserDTO;
 import com.message.mmessage.exception.MessageException;
 import com.message.mmessage.messageMapper.MessageMapper;
 import com.message.mmessage.model.Message;
 import com.message.mmessage.repository.MessageRepository;
-import com.message.mmessage.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class MessageServiceImple implements MessageService{
 
     private MessageRepository messageRepository;
 
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     @Override
     public MessageDTO saveMessage(MessageDTO messageDto) {
         Message message = MessageMapper.mapToMessage(messageDto);
@@ -66,9 +66,9 @@ public class MessageServiceImple implements MessageService{
             throw new MessageException(MessageException.NotFoundException(idMessage));
         }else {
             MessageDTO dto =MessageMapper.mapToMessageDto(messageOptional.get());
-            UserDTO sender = userFeignClient.getUser(dto.getIdSender()).getBody();
+            SimpleUserDTO sender = userFeignClient.getSimpleUser(dto.getIdSender());
             dto.setSender(sender);
-            UserDTO reciver = userFeignClient.getUser(dto.getIdSender()).getBody();
+            SimpleUserDTO reciver = userFeignClient.getSimpleUser(dto.getIdSender());
             dto.setReciver(reciver);
             return dto;
         }
@@ -96,9 +96,9 @@ public class MessageServiceImple implements MessageService{
         if (messages.size() > 0) {
             for (Message message : messages) {
                 MessageDTO dto = MessageMapper.mapToMessageDto(message);
-                UserDTO sender = userFeignClient.getUser(dto.getIdSender()).getBody();
+                SimpleUserDTO sender = userFeignClient.getSimpleUser(dto.getIdSender());
                 dto.setSender(sender);
-                UserDTO reciver = userFeignClient.getUser(dto.getIdSender()).getBody();
+                SimpleUserDTO reciver = userFeignClient.getSimpleUser(dto.getIdSender());
                 dto.setReciver(reciver);
                 messageDto.add(dto);
             }

@@ -16,6 +16,6 @@ public class ProjectDTO {
     private String description;
     private Integer status;
     private Long idUser;
-    private UserDTO user;
-    private List<UserDTO> membres;
+    private SimpleUserDTO user;
+    private List<SimpleUserDTO> membres;
 }

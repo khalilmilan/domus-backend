@@ -2,7 +2,7 @@ package com.mproject_user.mproject_user.controller;
 
 import com.mproject_user.mproject_user.dto.ProjectDTO;
 import com.mproject_user.mproject_user.dto.ProjectUserDTO;
-import com.mproject_user.mproject_user.dto.UserDTO;
+import com.mproject_user.mproject_user.dto.SimpleUserDTO;
 import com.mproject_user.mproject_user.exception.ProjectUserException;
 import com.mproject_user.mproject_user.model.ProjectUser;
 import com.mproject_user.mproject_user.service.ProjectUserService;
@@ -84,13 +84,13 @@ public class ProjectUserController {
                 }
         }
         @GetMapping("/by_project/{idProject}")
-        public ResponseEntity<List<UserDTO>> getProjectUserByProject(@PathVariable("idProject") Long idProject) {
-                List<UserDTO> membres = projectUserService.getProjectUserByProject(idProject);
+        public List<SimpleUserDTO> getProjectUserByProject(@PathVariable("idProject") Long idProject) {
+                List<SimpleUserDTO> membres = projectUserService.getProjectUserByProject(idProject);
                 if(membres.size()>0){
-                        return new ResponseEntity<>(membres,  HttpStatus.OK );
+                        return membres ;
 
                 }else{
-                        return new ResponseEntity<>(new ArrayList<UserDTO>(), HttpStatus.NOT_FOUND);
+                        return new ArrayList<>();
 
                 }
         }

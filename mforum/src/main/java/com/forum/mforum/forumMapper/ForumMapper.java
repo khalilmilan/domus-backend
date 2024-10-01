@@ -2,6 +2,7 @@ package com.forum.mforum.forumMapper;
 
 import com.forum.mforum.dto.EventDTO;
 import com.forum.mforum.dto.ForumDTO;
+import com.forum.mforum.dto.SimpleUserDTO;
 import com.forum.mforum.dto.UserDTO;
 import com.forum.mforum.model.Forum;
 
@@ -17,7 +18,7 @@ public class ForumMapper {
                 forum.getStatus(),
                 forum.getIdUser(),
                 forum.getIdEvent(),
-                new UserDTO(),
+                new SimpleUserDTO(),
                 new EventDTO(),
                 new ArrayList<>()
 

@@ -1,7 +1,7 @@
 package com.groupe.mgroupe.groupeMapper;
 
 import com.groupe.mgroupe.dto.GroupeDTO;
-import com.groupe.mgroupe.dto.UserDTO;
+import com.groupe.mgroupe.dto.SimpleUserDTO;
 import com.groupe.mgroupe.model.Groupe;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class GroupeMapper {
                 groupe.getLabel(),
                 groupe.getStatus(),
                 groupe.getIdUser(),
-                new UserDTO(),
+                new SimpleUserDTO(),
                 new ArrayList<>()
         );
         return groupeDto;

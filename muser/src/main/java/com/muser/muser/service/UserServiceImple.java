@@ -1,9 +1,12 @@
 package com.muser.muser.service;
 
+import com.muser.muser.dto.RoleDTO;
+import com.muser.muser.dto.SimpleUserDTO;
 import com.muser.muser.dto.UserDTO;
 import com.muser.muser.exception.UserException;
 import com.muser.muser.model.User;
 import com.muser.muser.repository.UserRepository;
+import com.muser.muser.service.client.RoleFeignClient;
 import com.muser.muser.userMapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -20,6 +23,7 @@ public class UserServiceImple implements UserService{
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImple.class);
 
     private UserRepository userRepository;
+    private RoleFeignClient roleFeignClient;
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
@@ -60,13 +64,22 @@ public class UserServiceImple implements UserService{
         if (!userOptional.isPresent()) {
             throw new UserException(UserException.NotFoundException(idUser));
         }else {
-            UserDTO dto =UserMapper.mapToUserDto(userOptional.get());
-            //  List<EventDTO> ambulances = apiClient.getAmbulances(dto.getId());
-            // dto.setAmbulances(ambulances);
+            UserDTO dto = UserMapper.mapToUserDto(userOptional.get());
+            RoleDTO role = roleFeignClient.getRole(dto.getIdRole()).getBody();
+            dto.setRole(role);
             return dto;
         }
     }
-
+    @Override
+    public SimpleUserDTO getSimpleUser(Long idUser) throws UserException {
+        Optional<User> userOptional = userRepository.findById(idUser);
+        if (!userOptional.isPresent()) {
+            throw new UserException(UserException.NotFoundException(idUser));
+        }else {
+            SimpleUserDTO dto = UserMapper.mapToSimpleUserDto(userOptional.get());
+            return dto;
+        }
+    }
     @Override
     public void updateUser(Long idUser, User user) throws UserException {
         Optional<User> userWithId = userRepository.findById(idUser);
@@ -90,6 +103,19 @@ public class UserServiceImple implements UserService{
         else
         {
             throw new UserException(UserException.NotFoundException(idUser));
+        }
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) throws UserException {
+        User userOptional = userRepository.findUserByEmail(email);
+        if (userOptional ==null) {
+            throw new UserException(UserException.NotFoundUserException(email));
+        }else {
+            UserDTO dto =UserMapper.mapToUserDto(userOptional);
+            RoleDTO role = roleFeignClient.getRole(dto.getIdRole()).getBody();
+            dto.setRole(role);
+            return dto;
         }
     }
 }

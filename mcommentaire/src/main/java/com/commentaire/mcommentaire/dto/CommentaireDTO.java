@@ -19,5 +19,5 @@ public class CommentaireDTO {
     private Integer Status;
     private Long idUser;
     private Long idForum;
-    private UserDTO user;
+    private SimpleUserDTO user;
 }

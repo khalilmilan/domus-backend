@@ -1,5 +1,7 @@
 package com.muser.muser.userMapper;
 
+import com.muser.muser.dto.RoleDTO;
+import com.muser.muser.dto.SimpleUserDTO;
 import com.muser.muser.dto.UserDTO;
 import com.muser.muser.model.User;
 
@@ -19,9 +21,22 @@ public class UserMapper {
                 user.getBirthDate(),
                 user.getPhoneNumber(),
                 user.getStatus(),
-                user.getIdRank()
+                user.getUserType(),
+                user.getIdRank(),
+                user.getIdRole(),
+                new RoleDTO()
         );
         return userDto;
+    }
+    public static SimpleUserDTO mapToSimpleUserDto(User user){
+        SimpleUserDTO userDto = new SimpleUserDTO(
+                user.getIdUser(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhoto()
+        );
+        return userDto;
+
     }
 
     public static User mapToUser(UserDTO userDto){
@@ -38,6 +53,8 @@ public class UserMapper {
                 userDto.getBirthDate(),
                 userDto.getPhoneNumber(),
                 userDto.getStatus(),
+                userDto.getUserType(),
+                userDto.getIdRole(),
                 userDto.getIdRank()
         );
         return user;

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,14 @@ public class UserDeviceController {
 
     private UserDeviceService userDeviceService;
     @GetMapping(value = "/lowel")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public String test(){
         return "hi";
+    }
+    @GetMapping(value = "/theni")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public String test1(){
+        return "hi user";
     }
     @PostMapping
     public ResponseEntity<UserDeviceDTO> saveGroupe(@RequestBody UserDeviceDTO userDeviceDto){

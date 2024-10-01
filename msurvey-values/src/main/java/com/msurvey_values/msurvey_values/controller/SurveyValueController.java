@@ -24,9 +24,9 @@ public class SurveyValueController {
         return "hi";
     }
     @PostMapping
-    public ResponseEntity<SurveyValueDTO> saveSurveyValue(@RequestBody SurveyValueDTO surveyValueDTO){
+    public SurveyValueDTO saveSurveyValue(@RequestBody SurveyValueDTO surveyValueDTO){
         SurveyValueDTO savedSurveyValue = surveyValueService.saveSurveyValue(surveyValueDTO);
-        return new ResponseEntity<>(savedSurveyValue, HttpStatus.CREATED);
+        return savedSurveyValue;
     }
     @GetMapping("")
     public ResponseEntity<?> getAllSurveyValue() {
@@ -35,11 +35,11 @@ public class SurveyValueController {
     }
 
     @GetMapping("/{idSurveyValue}")
-    public ResponseEntity<SurveyValueDTO> getSurveyValue(@PathVariable("idSurveyValue") Long idSurveyValue) throws SurveyValueException {
+    public SurveyValueDTO getSurveyValue(@PathVariable("idSurveyValue") Long idSurveyValue) throws SurveyValueException {
         try {
-            return new ResponseEntity<>(surveyValueService.getSurveyValue(idSurveyValue), HttpStatus.OK);
+            return surveyValueService.getSurveyValue(idSurveyValue);
         } catch (SurveyValueException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SurveyValueDTO());
+           return new SurveyValueDTO();
         }
     }
 
@@ -80,8 +80,7 @@ public class SurveyValueController {
     public ResponseEntity<List<SurveyValueDTO>> getSurveyesBySurvey(@PathVariable("idSurvey") Long idSurvey){
         List<SurveyValueDTO> surveyvalues = surveyValueService.getALLSurveyValueBySurvey(idSurvey);
         if(surveyvalues.size() > 0 ){
-            return new ResponseEntity<>(surveyvalues,  HttpStatus.OK );
-
+            return new ResponseEntity<>(surveyvalues,  HttpStatus.OK);
         }else{
 
         }

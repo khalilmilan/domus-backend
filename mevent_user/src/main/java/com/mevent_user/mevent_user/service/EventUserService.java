@@ -1,7 +1,7 @@
 package com.mevent_user.mevent_user.service;
 
 import com.mevent_user.mevent_user.dto.EventUserDTO;
-import com.mevent_user.mevent_user.dto.UserDTO;
+import com.mevent_user.mevent_user.dto.SimpleUserDTO;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.model.EventUser;
@@ -21,6 +21,6 @@ public interface EventUserService {
 
     public void updateEventUser(Long id, EventUser event) throws EventUserException;
 
-    public List<UserDTO> getEventUserByEvent(Long idEvent);
+    public List<SimpleUserDTO> getEventUserByEvent(Long idEvent);
     public void deleteEventUserByIdEventIdUser(Long idEvent,Long idUser) throws EventUserException;
 }

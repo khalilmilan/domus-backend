@@ -1,5 +1,7 @@
 package com.vote.mvote.voteMapper;
 
+import com.vote.mvote.dto.SimpleUserDTO;
+import com.vote.mvote.dto.SurveyValueDTO;
 import com.vote.mvote.dto.VoteDTO;
 import com.vote.mvote.model.Vote;
 
@@ -12,7 +14,9 @@ public class VoteMapper {
                 vote.getStatus(),
                 vote.getIdUser(),
                 vote.getIdSurvey(),
-                vote.getIdSurveyValue()
+                vote.getIdSurveyValue(),
+                new SimpleUserDTO(),
+                new SurveyValueDTO()
         );
         return voteDto;
     }

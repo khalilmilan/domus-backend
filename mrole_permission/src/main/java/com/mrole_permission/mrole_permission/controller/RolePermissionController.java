@@ -24,9 +24,9 @@ public class RolePermissionController {
         return "hi";
     }
     @PostMapping
-    public ResponseEntity<RolePermissionDTO> saveRolePermission(@RequestBody RolePermissionDTO rolePermissionDto){
+    public RolePermissionDTO saveRolePermission(@RequestBody RolePermissionDTO rolePermissionDto){
         RolePermissionDTO savedGroupeUser = rolePermissionService.saveRolePermission(rolePermissionDto);
-        return new ResponseEntity<>(savedGroupeUser, HttpStatus.CREATED);
+        return savedGroupeUser;
     }
     @GetMapping("")
     public ResponseEntity<?> getAllRolePermission() {
@@ -44,14 +44,14 @@ public class RolePermissionController {
     }
 
     @DeleteMapping("/{idRolePermission}")
-    public ResponseEntity<?> deleteById(@PathVariable("idRolePermission") Long idRolePermission) throws RolePermissionException{
+    public void deleteById(@PathVariable("idRolePermission") Long idRolePermission) throws RolePermissionException{
         try{
             rolePermissionService.deleteRolePermission(idRolePermission);
-            return new ResponseEntity<>("Successfully deleted role permission with id "+idRolePermission, HttpStatus.OK);
+
         }
         catch (RolePermissionException e)
         {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         }
     }
 
@@ -72,20 +72,19 @@ public class RolePermissionController {
     }
 
       @GetMapping("/role/{idRole}")
-        ResponseEntity<List<PermissionDTO>> getPermissionByRole(@PathVariable("idRole")Long idRole){
+        List<PermissionDTO> getPermissionByRole(@PathVariable("idRole")Long idRole){
         List<PermissionDTO> permissions = rolePermissionService.getRolePermissionByRole(idRole);
-        return new ResponseEntity<>(permissions, permissions.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return permissions;
     }
 
     @DeleteMapping("/delete_permission/{idRole}/{idPermission}")
-    public ResponseEntity<String> deleteByGroupeAndUser(@PathVariable("idRole") Long idRole,@PathVariable("idPermission") Long idPermission) throws RolePermissionException{
+    public void deleteByGroupeAndUser(@PathVariable("idRole") Long idRole,@PathVariable("idPermission") Long idPermission) throws RolePermissionException{
         try{
             rolePermissionService.deleteRolePermissionByIdRoleIdPermission(idRole,idPermission);
-            return new ResponseEntity<>("Successfully deleted rolePermission with idRole "+idRole+" and idPermission:"+idPermission, HttpStatus.OK);
         }
         catch (RolePermissionException e)
         {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         }
     }
 }

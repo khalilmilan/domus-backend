@@ -1,7 +1,7 @@
 package com.msurvey.msurvey.mapper;
 
+import com.msurvey.msurvey.dto.SimpleUserDTO;
 import com.msurvey.msurvey.dto.SurveyDTO;
-import com.msurvey.msurvey.dto.UserDTO;
 import com.msurvey.msurvey.model.Survey;
 
 import java.util.ArrayList;
@@ -14,8 +14,10 @@ public class SurveyMapper {
                 survey.getDescription(),
                 survey.getStatus(),
                 survey.getIdUser(),
-                new UserDTO(),
+                new SimpleUserDTO(),
+                new ArrayList<>(),
                 new ArrayList<>()
+
         );
         return eventDto;
     }

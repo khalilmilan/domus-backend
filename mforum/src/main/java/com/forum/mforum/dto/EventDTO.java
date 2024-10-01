@@ -26,8 +26,8 @@ public class EventDTO {
 
     private Integer status;
 
-    private UserDTO user;
+    private SimpleUserDTO user;
 
-    private List<UserDTO> participants;
+    private List<SimpleUserDTO> participants;
 
 }

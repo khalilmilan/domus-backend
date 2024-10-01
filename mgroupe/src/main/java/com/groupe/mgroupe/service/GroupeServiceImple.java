@@ -1,19 +1,18 @@
 package com.groupe.mgroupe.service;
 
+import com.groupe.mgroupe.client.GroupeUserFeignClient;
+import com.groupe.mgroupe.client.UserServiceClient;
 import com.groupe.mgroupe.dto.GroupeDTO;
 import com.groupe.mgroupe.dto.GroupeUserDTO;
-import com.groupe.mgroupe.dto.UserDTO;
+import com.groupe.mgroupe.dto.SimpleUserDTO;
 import com.groupe.mgroupe.exception.GroupeException;
 import com.groupe.mgroupe.groupeMapper.GroupeMapper;
 import com.groupe.mgroupe.model.Groupe;
 import com.groupe.mgroupe.repository.GroupeRepository;
-import com.groupe.mgroupe.service.client.GroupeUserFeignClient;
-import com.groupe.mgroupe.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.events.EventException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class GroupeServiceImple implements GroupeService{
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupeServiceImple.class);
 
     private GroupeRepository groupeRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private GroupeUserFeignClient groupeUserFeignClient;
 
     @Override
@@ -69,9 +68,9 @@ public class GroupeServiceImple implements GroupeService{
             throw new GroupeException(GroupeException.NotFoundException(idGroupe));
         }else {
             GroupeDTO dto =GroupeMapper.mapToGroupeDto(groupeOptional.get());
-            UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
-            List<UserDTO> membres =  groupeUserFeignClient.getAllUser(dto.getIdGroupe()).getBody();
+            List<SimpleUserDTO> membres =  groupeUserFeignClient.getAllUser(dto.getIdGroupe());
             dto.setMembres(membres);
             return dto;
         }
@@ -102,7 +101,7 @@ public class GroupeServiceImple implements GroupeService{
                     idUser,
                     1
             );
-             groupeUserFeignClient.saveGroupeUser(eventUserDto).getBody();
+             groupeUserFeignClient.saveGroupeUser(eventUserDto);
         }
         else
         {
@@ -116,8 +115,7 @@ public class GroupeServiceImple implements GroupeService{
         Optional<Groupe> groupeWithId = groupeRepository.findById(idGroupe);
         if(groupeWithId.isPresent())
         {
-
-            groupeUserFeignClient.deleteByGroupeAndUser(idGroupe,idUser).getBody();
+            groupeUserFeignClient.deleteByGroupeAndUser(idGroupe,idUser);
         }
         else
         {

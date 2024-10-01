@@ -1,7 +1,7 @@
 package com.message.mmessage.messageMapper;
 
 import com.message.mmessage.dto.MessageDTO;
-import com.message.mmessage.dto.UserDTO;
+import com.message.mmessage.dto.SimpleUserDTO;
 import com.message.mmessage.model.Message;
 
 public class MessageMapper {
@@ -15,8 +15,8 @@ public class MessageMapper {
                 message.getIdReciver(),
                 message.getIdDiscussion(),
                 message.getDate(),
-                new UserDTO(),
-                new UserDTO()
+                new SimpleUserDTO(),
+                new SimpleUserDTO()
 
         );
         return messageDto;

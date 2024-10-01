@@ -1,6 +1,5 @@
 package com.mgroupe_user.mgroupe_user.mapper;
 
-import com.mgroupe_user.mgroupe_user.dto.UserDTO;
 import com.mgroupe_user.mgroupe_user.dto.GroupeUserDTO;
 import com.mgroupe_user.mgroupe_user.model.GroupeUser;
 

@@ -16,5 +16,5 @@ public class SurveyValueDTO {
     private Integer status;
     private Long idSurvey;
     private Long idUser;
-    private UserDTO user;
+    private SimpleUserDTO user;
 }

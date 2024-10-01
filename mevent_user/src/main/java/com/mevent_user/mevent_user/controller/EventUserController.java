@@ -1,7 +1,7 @@
 package com.mevent_user.mevent_user.controller;
 
 import com.mevent_user.mevent_user.dto.EventUserDTO;
-import com.mevent_user.mevent_user.dto.UserDTO;
+import com.mevent_user.mevent_user.dto.SimpleUserDTO;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.model.EventUser;
 import com.mevent_user.mevent_user.service.EventUserService;
@@ -74,19 +74,24 @@ public class EventUserController {
     }
 
     @GetMapping("/event/{idEvent}")
-    ResponseEntity<List<UserDTO>> getAllEventsUser(@PathVariable("idEvent")Long idEvent){
-        List<UserDTO> participants = eventUserService.getEventUserByEvent(idEvent);
-        return new ResponseEntity<>(participants, participants.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    List<SimpleUserDTO> getAllEventsUser(@PathVariable("idEvent")Long idEvent){
+        List<SimpleUserDTO> participants = eventUserService.getEventUserByEvent(idEvent);
+        return participants;
+    }
+    @GetMapping("/khalil/test")
+    String khalil(){
+
+        return "test";
     }
     @DeleteMapping("/delete_participant/{idEvent}/{idUser}")
-    public ResponseEntity<?> deleteByEventAndUser(@PathVariable("idEvent") Long idEvent,@PathVariable("idUser") Long idUser) throws EventUserException{
+    public void deleteByEventAndUser(@PathVariable("idEvent") Long idEvent,@PathVariable("idUser") Long idUser) throws EventUserException{
         try{
             eventUserService.deleteEventUserByIdEventIdUser(idEvent,idUser);
-            return new ResponseEntity<>("Successfully deleted eventUser with idEvent "+idEvent+" and iduser:"+idUser, HttpStatus.OK);
+
         }
         catch (EventException e)
         {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         }
     }
 

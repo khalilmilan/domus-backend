@@ -24,7 +24,7 @@ public class NotificationDTO {
     private Integer status;
     private Long idSender;
     private Long idReciver;
-    private UserDTO sender;
-    private UserDTO reciver;
+    private SimpleUserDTO sender;
+    private SimpleUserDTO reciver;
 
 }

@@ -1,16 +1,13 @@
 package com.forum.mforum.service;
 
-import com.forum.mforum.dto.CommentaireDTO;
-import com.forum.mforum.dto.EventDTO;
-import com.forum.mforum.dto.ForumDTO;
-import com.forum.mforum.dto.UserDTO;
+import com.forum.mforum.client.CommentaireFeignClient;
+import com.forum.mforum.client.UserServiceClient;
+import com.forum.mforum.dto.*;
 import com.forum.mforum.exception.ForumException;
 import com.forum.mforum.forumMapper.ForumMapper;
 import com.forum.mforum.model.Forum;
 import com.forum.mforum.repository.ForumRepository;
-import com.forum.mforum.service.client.CommentaireFeignClient;
-import com.forum.mforum.service.client.EventFeignClient;
-import com.forum.mforum.service.client.UserFeignClient;
+import com.forum.mforum.client.EventFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +24,7 @@ public class ForumServiceImple implements ForumService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImple.class);
 
     private ForumRepository forumRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private EventFeignClient eventFeignClient;
     private CommentaireFeignClient commentaireFeignClient;
     @Override
@@ -45,9 +42,9 @@ public class ForumServiceImple implements ForumService{
         if (forums.size() > 0) {
             for (Forum forum : forums) {
                 ForumDTO dto =ForumMapper.mapToForumDto(forum);
-                EventDTO event = eventFeignClient.getEvent(dto.getIdEvent()).getBody();
-                dto.setEvent(event);
-                UserDTO user = userFeignClient.getUser(dto.getIdUser()).getBody();
+                //EventDTO event = eventFeignClient.getEvent(dto.getIdEvent()).getBody();
+                //dto.setEvent(event);
+                SimpleUserDTO user = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(user);
                 forumDto.add(dto);
             }
@@ -74,11 +71,11 @@ public class ForumServiceImple implements ForumService{
             throw new ForumException(ForumException.NotFoundException(idForum));
         }else {
             ForumDTO dto =ForumMapper.mapToForumDto(forumOptional.get());
-            EventDTO event = eventFeignClient.getEvent(dto.getIdEvent()).getBody();
+            EventDTO event = eventFeignClient.getEvent(dto.getIdEvent());
             dto.setEvent(event);
-            UserDTO user = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO user = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(user);
-            List<CommentaireDTO> comments = commentaireFeignClient.getcommentByForum(dto.getIdForum()).getBody();
+            List<CommentaireDTO> comments = commentaireFeignClient.getcommentByForum(dto.getIdForum());
             dto.setComments(comments);
             return dto;
         }
@@ -110,6 +107,12 @@ public class ForumServiceImple implements ForumService{
         if (forums.size() > 0) {
             for (Forum forum : forums) {
                 ForumDTO dto =ForumMapper.mapToForumDto(forum);
+               // EventDTO event = eventFeignClient.getEvent(dto.getIdEvent());
+               // dto.setEvent(event);
+                SimpleUserDTO user = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(user);
+                List<CommentaireDTO> comments = commentaireFeignClient.getcommentByForum(dto.getIdForum());
+                dto.setComments(comments);
                 forumDto.add(dto);
             }
             return forumDto;

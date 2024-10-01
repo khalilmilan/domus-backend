@@ -34,11 +34,11 @@ public class ProjectController {
     }
 
     @GetMapping("/{idProject}")
-    public ResponseEntity<ProjectDTO> getProject(@PathVariable("idProject") Long idProject) throws ProjectException {
+    public ProjectDTO getProject(@PathVariable("idProject") Long idProject) throws ProjectException {
         try {
-            return new ResponseEntity<>(projectService.getProject(idProject), HttpStatus.OK);
+            return projectService.getProject(idProject);
         } catch (ProjectException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProjectDTO());
+            return new ProjectDTO();
         }
     }
 
@@ -71,13 +71,12 @@ public class ProjectController {
     }
 
     @GetMapping("/by_user/{idUser}")
-    public ResponseEntity<?> getProjectByUser(@PathVariable("idUser") Long idUser) {
+    public List<ProjectDTO> getProjectByUser(@PathVariable("idUser") Long idUser) {
         List<ProjectDTO> projects = projectService.getProjectByUser(idUser);
         if(projects.size()>0){
-            return new ResponseEntity<>(projects,  HttpStatus.OK );
-
+            return projects;
         }else{
-            return new ResponseEntity<>(new ArrayList<ProjectDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<>();
 
         }
     }

@@ -25,22 +25,22 @@ public class CommentaireController {
         return "hi";
     }
     @PostMapping
-    public ResponseEntity<CommentaireDTO> saveCommentaire(@RequestBody CommentaireDTO commentaireDto){
+    public CommentaireDTO saveCommentaire(@RequestBody CommentaireDTO commentaireDto){
         CommentaireDTO savedCommentaire = commentaireService.saveCommentaire(commentaireDto);
-        return new ResponseEntity<>(savedCommentaire, HttpStatus.CREATED);
+        return savedCommentaire;
     }
     @GetMapping("")
-    public ResponseEntity<?> getAllCommentaire() {
+    public List<CommentaireDTO> getAllCommentaire() {
         List<CommentaireDTO> commentaires = commentaireService.getALLCommentaire();
-        return new ResponseEntity<>(commentaires, commentaires.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return commentaires ;
     }
 
     @GetMapping("/{idCommentaire}")
-    public ResponseEntity<CommentaireDTO> getCommentaire(@PathVariable("idCommentaire") Long idCommentaire) throws CommentaireException {
+    public CommentaireDTO getCommentaire(@PathVariable("idCommentaire") Long idCommentaire) throws CommentaireException {
         try {
-            return new ResponseEntity<>(commentaireService.getCommentaire(idCommentaire), HttpStatus.OK);
+          return  commentaireService.getCommentaire(idCommentaire);
         } catch (CommentaireException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommentaireDTO());
+          return new CommentaireDTO();
         }
     }
 
@@ -72,8 +72,8 @@ public class CommentaireController {
         }
     }
     @GetMapping("/comment_by_forum/{idForum}")
-    public ResponseEntity<List<CommentaireDTO>> getcommentByForum(@PathVariable("idForum") Long idForum) {
+    public List<CommentaireDTO> getcommentByForum(@PathVariable("idForum") Long idForum) {
         List<CommentaireDTO> commentaires = commentaireService.getCommentByForum(idForum);
-        return new ResponseEntity<>(commentaires, commentaires.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return commentaires;
     }
 }

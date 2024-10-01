@@ -21,5 +21,5 @@ public class PermissionDTO {
 
     private Long idUser;
 
-    private UserDTO user;
+    private SimpleUserDTO user;
 }

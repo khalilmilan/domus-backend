@@ -1,5 +1,9 @@
 package com.vote.mvote.service;
 
+import com.vote.mvote.client.SurveyValueServiceClient;
+import com.vote.mvote.client.UserServiceClient;
+import com.vote.mvote.dto.SimpleUserDTO;
+import com.vote.mvote.dto.SurveyValueDTO;
 import com.vote.mvote.dto.VoteDTO;
 import com.vote.mvote.exception.VoteException;
 import com.vote.mvote.model.Vote;
@@ -21,6 +25,8 @@ public class VoteServiceImple implements VoteService{
     private static final Logger LOGGER = LoggerFactory.getLogger(VoteServiceImple.class);
 
     private VoteRepository voteRepository;
+    private UserServiceClient userServiceClient;
+    private SurveyValueServiceClient surveyValueServiceClient;
     @Override
     public VoteDTO saveVote(VoteDTO voteDto) {
         Vote vote = VoteMapper.mapToVote(voteDto);
@@ -37,6 +43,10 @@ public class VoteServiceImple implements VoteService{
         if (votes.size() > 0) {
             for (Vote vote : votes) {
                 VoteDTO dto = VoteMapper.mapToVoteDto(vote);
+                SimpleUserDTO user = userServiceClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(user);
+                SurveyValueDTO value = surveyValueServiceClient.getSurveyValue(dto.getIdSurveyValue());
+                dto.setSurveyValuedto(value);
                 voteDto.add(dto);
             }
             return voteDto;
@@ -62,8 +72,10 @@ public class VoteServiceImple implements VoteService{
             throw new VoteException(VoteException.NotFoundException(idVote));
         }else {
             VoteDTO dto = VoteMapper.mapToVoteDto(voteOptional.get());
-            //  List<EventDTO> ambulances = apiClient.getAmbulances(dto.getId());
-            // dto.setAmbulances(ambulances);
+            SimpleUserDTO user = userServiceClient.getSimpleUser(dto.getIdUser());
+            dto.setUser(user);
+            SurveyValueDTO value = surveyValueServiceClient.getSurveyValue(dto.getIdSurveyValue());
+            dto.setSurveyValuedto(value);
             return dto;
         }
     }
@@ -94,6 +106,8 @@ public class VoteServiceImple implements VoteService{
             for (Vote vote : votes) {
                 VoteDTO dto = VoteMapper.mapToVoteDto(vote);
                 voteDto.add(dto);
+                SurveyValueDTO value = surveyValueServiceClient.getSurveyValue(dto.getIdSurveyValue());
+                dto.setSurveyValuedto(value);
             }
             return voteDto;
         }else {
@@ -108,6 +122,10 @@ public class VoteServiceImple implements VoteService{
         if (votes.size() > 0) {
             for (Vote vote : votes) {
                 VoteDTO dto = VoteMapper.mapToVoteDto(vote);
+                SimpleUserDTO user = userServiceClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(user);
+                SurveyValueDTO value = surveyValueServiceClient.getSurveyValue(dto.getIdSurveyValue());
+                dto.setSurveyValuedto(value);
                 voteDto.add(dto);
             }
             return voteDto;
@@ -123,6 +141,8 @@ public class VoteServiceImple implements VoteService{
         if (votes.size() > 0) {
             for (Vote vote : votes) {
                 VoteDTO dto = VoteMapper.mapToVoteDto(vote);
+                SimpleUserDTO user = userServiceClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(user);
                 voteDto.add(dto);
             }
             return voteDto;

@@ -1,7 +1,7 @@
 package com.permission.mpermission.permissionMapper;
 
 import com.permission.mpermission.dto.PermissionDTO;
-import com.permission.mpermission.dto.UserDTO;
+import com.permission.mpermission.dto.SimpleUserDTO;
 import com.permission.mpermission.model.Permission;
 
 public class PermissionMapper {
@@ -13,7 +13,7 @@ public class PermissionMapper {
                 permission.getDescription(),
                 permission.getStatus(),
                 permission.getIdUser(),
-                new UserDTO()
+                new SimpleUserDTO()
 
         );
         return permissionDto;

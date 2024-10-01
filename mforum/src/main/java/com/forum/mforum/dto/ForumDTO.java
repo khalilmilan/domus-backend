@@ -21,7 +21,7 @@ public class ForumDTO {
     private Integer status;
     private Long idUser;
     private Long idEvent;
-    private UserDTO user;
+    private SimpleUserDTO user;
     private EventDTO event;
 
     private List<CommentaireDTO> comments;

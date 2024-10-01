@@ -1,14 +1,14 @@
 package com.mdiscussion.mdiscussion.service;
 
+import com.mdiscussion.mdiscussion.client.MessageFeignClient;
+import com.mdiscussion.mdiscussion.client.UserServiceClient;
 import com.mdiscussion.mdiscussion.dto.DiscussionDTO;
 import com.mdiscussion.mdiscussion.dto.MessageDTO;
-import com.mdiscussion.mdiscussion.dto.UserDTO;
+import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import com.mdiscussion.mdiscussion.exception.DiscussionException;
 import com.mdiscussion.mdiscussion.mapper.DiscussionMapper;
 import com.mdiscussion.mdiscussion.model.Discussion;
 import com.mdiscussion.mdiscussion.repository.DiscussionRepository;
-import com.mdiscussion.mdiscussion.service.client.MessageFeignClient;
-import com.mdiscussion.mdiscussion.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class DiscussionServiceImple implements  DiscussionService{
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscussionServiceImple.class);
     private DiscussionRepository discussionRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private MessageFeignClient messageFeignClient;
     @Override
     public DiscussionDTO saveDiscussion(DiscussionDTO discussionDto) {
@@ -64,11 +64,11 @@ public class DiscussionServiceImple implements  DiscussionService{
             throw new DiscussionException(DiscussionException.NotFoundException(idDiscussion));
         }else {
             DiscussionDTO dto =DiscussionMapper.mapToDiscussionDto(discussionOptional.get());
-            UserDTO user1 = userFeignClient.getUser(dto.getIdUser1()).getBody();
+            SimpleUserDTO user1 = userFeignClient.getSimpleUser(dto.getIdUser1());
             dto.setUser1(user1);
-            UserDTO user2 = userFeignClient.getUser(dto.getIdUser2()).getBody();
+            SimpleUserDTO user2 = userFeignClient.getSimpleUser(dto.getIdUser2());
             dto.setUser2(user2);
-            List<MessageDTO> messages = messageFeignClient.getAllMessageByDiscussion(dto.getIdDiscussion()).getBody();
+            List<MessageDTO> messages = messageFeignClient.getAllMessageByDiscussion(dto.getIdDiscussion());
             dto.setMessages(messages);
             return dto;
         }

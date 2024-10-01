@@ -71,32 +71,32 @@ public class VoteController {
         }
     }
     @GetMapping("/by_user/{idUser}")
-    public ResponseEntity<List<VoteDTO>> getVoteByUser(@PathVariable("idUser") Long idUser) {
+    public List<VoteDTO> getVoteByUser(@PathVariable("idUser") Long idUser) {
         List<VoteDTO> votes = voteService.getVoteByUser(idUser);
         if(votes.size() > 0){
-            return new ResponseEntity<>(votes,HttpStatus.OK );
+            return votes ;
         }else{
-            return new ResponseEntity<>(new ArrayList<VoteDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<VoteDTO>();
         }
     }
 
 
     @GetMapping("/by_survey/{idSurvey}")
-    public ResponseEntity<List<VoteDTO>> getVoteBySurvey(@PathVariable("idSurvey") Long idSurvey) {
+    public List<VoteDTO> getVoteBySurvey(@PathVariable("idSurvey") Long idSurvey) {
         List<VoteDTO> votes = voteService.getVoteBySurvey(idSurvey);
         if(votes.size() > 0){
-            return new ResponseEntity<>(votes,HttpStatus.OK );
+           return votes;
         }else{
-            return new ResponseEntity<>(new ArrayList<VoteDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<VoteDTO>();
         }
     }
     @GetMapping("/by_survey_and_survey_value/{idSurvey}/{idSurveyValue}")
-    public ResponseEntity<List<VoteDTO>> getVoteBySurveyAndSurveyValue(@PathVariable("idSurvey") Long idSurvey, @PathVariable("idSurveyValue") Long idSurveyValue) {
+    public List<VoteDTO> getVoteBySurveyAndSurveyValue(@PathVariable("idSurvey") Long idSurvey, @PathVariable("idSurveyValue") Long idSurveyValue) {
         List<VoteDTO> votes = voteService.getVoteBySurveyAndSurveyValue(idSurvey,idSurveyValue);
         if(votes.size() > 0){
-            return new ResponseEntity<>(votes,HttpStatus.OK );
+            return votes;
         }else{
-            return new ResponseEntity<>(new ArrayList<VoteDTO>(), HttpStatus.NOT_FOUND);
+            return new ArrayList<VoteDTO>();
         }
     }
 

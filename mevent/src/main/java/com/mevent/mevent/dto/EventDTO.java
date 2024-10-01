@@ -16,8 +16,8 @@ public class EventDTO {
     private Long idUser;
     private Date date;
     private Integer status;
-    private UserDTO user;
-    private List<UserDTO> participants;
+    private SimpleUserDTO user;
+    private List<SimpleUserDTO> participants;
     private List<ForumDTO> forums;
 
 }

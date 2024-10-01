@@ -1,13 +1,13 @@
 package com.mgroupe_user.mgroupe_user.service;
 
 
+import com.mgroupe_user.mgroupe_user.client.UserServiceClient;
 import com.mgroupe_user.mgroupe_user.dto.GroupeUserDTO;
-import com.mgroupe_user.mgroupe_user.dto.UserDTO;
+import com.mgroupe_user.mgroupe_user.dto.SimpleUserDTO;
 import com.mgroupe_user.mgroupe_user.exception.GroupeUserException;
 import com.mgroupe_user.mgroupe_user.mapper.GroupeUserMapper;
 import com.mgroupe_user.mgroupe_user.model.GroupeUser;
 import com.mgroupe_user.mgroupe_user.repository.GroupeUserRepository;
-import com.mgroupe_user.mgroupe_user.service.client.UserFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class GroupeUserImple implements GroupeUserService{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupeUserImple.class);
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private GroupeUserRepository groupeUserRepository;
 
     @Override
@@ -86,18 +86,18 @@ public class GroupeUserImple implements GroupeUserService{
     }
 
     @Override
-    public List<UserDTO> getGroupeUserByGroupe(Long idGroupe) {
+    public List<SimpleUserDTO> getGroupeUserByGroupe(Long idGroupe) {
         List<GroupeUser> groupes = groupeUserRepository.findGroupeUserByIdGroupe(idGroupe);;
-        List<UserDTO> userDtos = new ArrayList<>();
+        List<SimpleUserDTO> userDtos = new ArrayList<>();
         if (groupes.size() > 0) {
             for (GroupeUser groupe : groupes) {
                 GroupeUserDTO dto =GroupeUserMapper.mapToGroupeUserDto(groupe);
-                UserDTO userDto =  userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto =  userFeignClient.getSimpleUser(dto.getIdUser());
                 userDtos.add(userDto);
             }
             return userDtos;
         }else {
-            return new ArrayList<UserDTO>();
+            return new ArrayList<SimpleUserDTO>();
         }
     }
 

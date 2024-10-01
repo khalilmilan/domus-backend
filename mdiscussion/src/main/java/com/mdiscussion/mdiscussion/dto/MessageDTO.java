@@ -18,6 +18,6 @@ public class MessageDTO {
     private Long idSender;
     private Long idReciver;
     private Date date;
-    private UserDTO reciver;
-    private UserDTO sender;
+    private SimpleUserDTO reciver;
+    private SimpleUserDTO sender;
 }

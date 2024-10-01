@@ -1,15 +1,15 @@
 package com.mproject.mproject.service;
 
+import com.mproject.mproject.client.UserServiceClient;
 import com.mproject.mproject.dto.ProjectDTO;
+import com.mproject.mproject.dto.SimpleUserDTO;
 import com.mproject.mproject.dto.TicketDTO;
-import com.mproject.mproject.dto.UserDTO;
 import com.mproject.mproject.exception.ProjectException;
 import com.mproject.mproject.mapper.ProjectMapper;
 import com.mproject.mproject.model.Project;
 import com.mproject.mproject.repository.ProjectRepository;
-import com.mproject.mproject.service.client.ProjectUserFeignClient;
-import com.mproject.mproject.service.client.TicketFeignClient;
-import com.mproject.mproject.service.client.UserFeignClient;
+import com.mproject.mproject.client.ProjectUserFeignClient;
+import com.mproject.mproject.client.TicketFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class ProjectServiceImple implements ProjectService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectServiceImple.class);
 
     private ProjectRepository projectRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private TicketFeignClient ticketFeignClient;
     private ProjectUserFeignClient projectUserFeignClient;
     @Override
@@ -47,7 +47,7 @@ public class ProjectServiceImple implements ProjectService{
         if (projects.size() > 0) {
             for (Project project : projects) {
                 ProjectDTO dto = ProjectMapper.mapToProjectDto(project);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
                 projectsDto.add(dto);
             }
@@ -74,11 +74,11 @@ public class ProjectServiceImple implements ProjectService{
             throw new ProjectException(ProjectException.NotFoundException(idProject));
         }else {
             ProjectDTO dto = ProjectMapper.mapToProjectDto(projectOptional.get());
-            UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
-            List<TicketDTO> tickets = ticketFeignClient.getTicketByProject(dto.getIdProject()).getBody();
+            List<TicketDTO> tickets = ticketFeignClient.getTicketByProject(dto.getIdProject());
             dto.setTickets(tickets);
-            List<UserDTO> membres = projectUserFeignClient.getProjectUserByProject(dto.getIdProject()).getBody();
+            List<SimpleUserDTO> membres = projectUserFeignClient.getProjectUserByProject(dto.getIdProject());
             dto.setMembres(membres);
             return dto;
         }
@@ -108,9 +108,8 @@ public class ProjectServiceImple implements ProjectService{
         if (projects.size() > 0) {
             for (Project project : projects) {
                 ProjectDTO dto = ProjectMapper.mapToProjectDto(project);
-                UserDTO userDto = userFeignClient.getUser(dto.getIdUser()).getBody();
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
-
                 projectsDto.add(dto);
             }
             return projectsDto;

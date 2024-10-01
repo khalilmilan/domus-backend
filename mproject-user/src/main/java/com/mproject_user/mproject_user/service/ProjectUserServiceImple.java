@@ -1,14 +1,14 @@
 package com.mproject_user.mproject_user.service;
 
+import com.mproject_user.mproject_user.client.UserServiceClient;
 import com.mproject_user.mproject_user.dto.ProjectDTO;
 import com.mproject_user.mproject_user.dto.ProjectUserDTO;
-import com.mproject_user.mproject_user.dto.UserDTO;
+import com.mproject_user.mproject_user.dto.SimpleUserDTO;
 import com.mproject_user.mproject_user.exception.ProjectUserException;
 import com.mproject_user.mproject_user.mapper.ProjectUserMapper;
 import com.mproject_user.mproject_user.model.ProjectUser;
 import com.mproject_user.mproject_user.repository.ProjectUserRepository;
-import com.mproject_user.mproject_user.service.client.ProjectFeignClient;
-import com.mproject_user.mproject_user.service.client.UserFeignClient;
+import com.mproject_user.mproject_user.client.ProjectFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ProjectUserServiceImple implements ProjectUserService{
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectUserServiceImple.class);
     private ProjectUserRepository projectUserRepository;
-    private UserFeignClient userFeignClient;
+    private UserServiceClient userFeignClient;
     private ProjectFeignClient projectFeignClient;
     @Override
     public ProjectUserDTO saveProjectUser(ProjectUserDTO projectUserDto) {
@@ -83,17 +83,17 @@ public class ProjectUserServiceImple implements ProjectUserService{
     }
 
     @Override
-    public List<UserDTO> getProjectUserByProject(Long idProject) {
+    public List<SimpleUserDTO> getProjectUserByProject(Long idProject) {
         List<ProjectUser> projectsUser = projectUserRepository.findAll();
-        List<UserDTO> membres= new ArrayList<>();
+        List<SimpleUserDTO> membres= new ArrayList<>();
         if (projectsUser.size() > 0) {
             for (ProjectUser projectUser : projectsUser) {
-                UserDTO user = userFeignClient.getUser(projectUser.getIdUser()).getBody();
+                SimpleUserDTO user = userFeignClient.getSimpleUser(projectUser.getIdUser());
                 membres.add(user);
             }
             return membres;
         }else {
-            return new ArrayList<UserDTO>();
+            return new ArrayList<SimpleUserDTO>();
         }
     }
 
@@ -103,7 +103,7 @@ public class ProjectUserServiceImple implements ProjectUserService{
         List<ProjectDTO> projects= new ArrayList<>();
         if (projectsUser.size() > 0) {
             for (ProjectUser projectUser : projectsUser) {
-                ProjectDTO project = projectFeignClient.getProject(projectUser.getIdProject()).getBody();
+                ProjectDTO project = projectFeignClient.getProject(projectUser.getIdProject());
                 projects.add(project);
             }
             return projects;

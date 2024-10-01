@@ -23,10 +23,10 @@ public class MessageController {
     public String test(){
         return "hi";
     }
-    @PostMapping
-    public ResponseEntity<MessageDTO> saveMessage(@RequestBody MessageDTO messageDto){
+    @PostMapping("")
+    public MessageDTO saveMessage(@RequestBody MessageDTO messageDto){
         MessageDTO savedMessage = messageService.saveMessage(messageDto);
-        return new ResponseEntity<>(savedMessage, HttpStatus.CREATED);
+        return savedMessage;
     }
     @GetMapping("")
     public ResponseEntity<?> getAllMessage() {
@@ -35,45 +35,45 @@ public class MessageController {
     }
 
     @GetMapping("/{idMessage}")
-    public ResponseEntity<?> getMessage(@PathVariable("idMessage") Long idMessage) throws MessageException {
+    public MessageDTO getMessage(@PathVariable("idMessage") Long idMessage) throws MessageException {
         try {
-            return new ResponseEntity<>(messageService.getMessage(idMessage), HttpStatus.OK);
+            return messageService.getMessage(idMessage);
         } catch (MessageException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new MessageDTO();
         }
     }
 
     @DeleteMapping("/{idMessage}")
-    public ResponseEntity<?> deleteById(@PathVariable("idMessage") Long idMessage) throws MessageException{
+    public void deleteById(@PathVariable("idMessage") Long idMessage) throws MessageException{
         try{
             messageService.deleteMessage(idMessage);
-            return new ResponseEntity<>("Successfully deleted message with id "+idMessage, HttpStatus.OK);
+
         }
         catch (MessageException e)
         {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         }
     }
 
     @PutMapping("/{idMessage}")
-    public ResponseEntity<?> updateById(@PathVariable("idMessage") Long idMessage, @RequestBody Message message)
+    public void updateById(@PathVariable("idMessage") Long idMessage, @RequestBody Message message)
     {
         try {
             messageService.updateMessage(idMessage,message);
-            return new ResponseEntity<>("Updated message with id "+idMessage+"", HttpStatus.OK);
+
         }
         catch(ConstraintViolationException e)
         {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+
         }
         catch (MessageException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
         }
     }
 
     @GetMapping("/by_discussion/{idDiscussion}")
-    public ResponseEntity<List<MessageDTO>> getAllMessageByDiscussion(@PathVariable("idDiscussion") Long idDiscussion) {
+    public List<MessageDTO> getAllMessageByDiscussion(@PathVariable("idDiscussion") Long idDiscussion) {
         List<MessageDTO> messages = messageService.getMessageByDiscussion(idDiscussion);
-        return new ResponseEntity<>(messages, messages.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return messages;
     }
 }

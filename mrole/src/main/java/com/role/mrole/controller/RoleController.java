@@ -34,11 +34,11 @@ public class RoleController {
     }
 
     @GetMapping("/{idRole}")
-    public ResponseEntity<?> getRole(@PathVariable("idRole") Long idRole) throws RoleException {
+    public ResponseEntity<RoleDTO> getRole(@PathVariable("idRole") Long idRole) throws RoleException {
         try {
             return new ResponseEntity<>(roleService.getRole(idRole), HttpStatus.OK);
         } catch (RoleException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new RoleDTO(), HttpStatus.NOT_FOUND);
         }
     }
 
