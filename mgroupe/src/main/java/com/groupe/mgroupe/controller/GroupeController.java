@@ -36,11 +36,11 @@ public class GroupeController {
     }
 
     @GetMapping("/{idGroupe}")
-    public ResponseEntity<?> getGroupe(@PathVariable("idGroupe") Long idGroupe) throws GroupeException {
+    public GroupeDTO getGroupe(@PathVariable("idGroupe") Long idGroupe) throws GroupeException {
         try {
-            return new ResponseEntity<>(groupeService.getGroupe(idGroupe), HttpStatus.OK);
+            return groupeService.getGroupe(idGroupe);
         } catch (GroupeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new GroupeDTO();
         }
     }
 
@@ -74,7 +74,6 @@ public class GroupeController {
 
     @PostMapping("/add_membre/{idGroupe}/{idUser}")
     public ResponseEntity<?> addMembre(@PathVariable("idGroupe") Long idGroupe,@PathVariable("idUser") Long idUser){
-
         try{
             groupeService.addMembre(idGroupe,idUser);
             return new ResponseEntity<>("Successfully added membre with id "+idUser+"in groupe:"+idGroupe, HttpStatus.OK);
@@ -95,5 +94,15 @@ public class GroupeController {
         {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/by_user/{idUser}")
+    public ResponseEntity<?> getGroupeByUser(@PathVariable("idUser") Long idUser) {
+        List<GroupeDTO> groupes = groupeService.getGroupeByUser(idUser);
+        return new ResponseEntity<>(groupes, groupes.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/by_membre/{idUser}")
+    public ResponseEntity<?> getGroupeByMembre(@PathVariable("idUser") Long idUser) {
+        List<GroupeDTO> groupes = groupeService.getGroupeByMembre(idUser);
+        return new ResponseEntity<>(groupes, groupes.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 }

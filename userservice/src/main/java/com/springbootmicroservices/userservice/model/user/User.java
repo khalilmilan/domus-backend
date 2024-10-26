@@ -36,7 +36,6 @@ public class User extends BaseDomainModel {
     private UserGender gender;
     private  Long  idGroupe;
     private Date birthDate;
-
     private Long idRank;
     private Long idRole;
     private RoleDTO role;

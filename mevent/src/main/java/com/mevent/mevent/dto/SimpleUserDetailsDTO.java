@@ -9,8 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUserDTO {
-    private Long idEvent;
-    private Long idUser;
-    private Integer status;
+public class SimpleUserDetailsDTO {
+    SimpleUserDTO user;
+    Integer answer;
 }

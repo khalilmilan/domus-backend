@@ -1,7 +1,6 @@
 package com.mticket.mticket.service;
 
 import com.mticket.mticket.client.UserServiceClient;
-import com.mticket.mticket.dto.ProjectDTO;
 import com.mticket.mticket.dto.SimpleUserDTO;
 import com.mticket.mticket.dto.TicketDTO;
 import com.mticket.mticket.exception.TicketException;
@@ -75,8 +74,10 @@ public class TicketServiceImple implements TicketService{
             TicketDTO dto = TicketMapper.mapToTicketDto(ticketOptional.get());
             SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
             dto.setUser(userDto);
-            SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
-            dto.setUserAffectedTo(affecteToDto);
+            if(null!=dto.getAffectedTo()) {
+                SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
+                dto.setUserAffectedTo(affecteToDto);
+            }
            // ProjectDTO project = projectFeignClient.getProject(dto.getIdProject()).getBody();
            // dto.setProject(project);
             return dto;
@@ -110,10 +111,10 @@ public class TicketServiceImple implements TicketService{
                 TicketDTO dto = TicketMapper.mapToTicketDto(ticket);
                 SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
-                SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
-                dto.setUserAffectedTo(affecteToDto);
-               // ProjectDTO project = projectFeignClient.getProject(dto.getIdProject());
-              //  dto.setProject(project);
+                if(null!=dto.getAffectedTo()){
+                    SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
+                    dto.setUserAffectedTo(affecteToDto);
+                }
                 ticketsDto.add(dto);
             }
             return ticketsDto;
@@ -152,15 +153,20 @@ public class TicketServiceImple implements TicketService{
                 TicketDTO dto = TicketMapper.mapToTicketDto(ticket);
                 SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
-                SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
-                dto.setUserAffectedTo(affecteToDto);
-               // ProjectDTO project = projectFeignClient.getProject(dto.getIdProject());
-               // dto.setProject(project);
+                if(null!=dto.getAffectedTo()) {
+                    SimpleUserDTO affecteToDto = userFeignClient.getSimpleUser(dto.getAffectedTo());
+                    dto.setUserAffectedTo(affecteToDto);
+                }
                 ticketsDto.add(dto);
             }
             return ticketsDto;
         }else {
             return new ArrayList<TicketDTO>();
         }
+    }
+
+    @Override
+    public List<TicketDTO> getTicketByProjectAndIdUser(Long idProject, Long idUser) {
+        return null;
     }
 }

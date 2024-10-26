@@ -3,6 +3,7 @@ package com.mevent.mevent.client;
 import com.mevent.mevent.configurations.FeignClientSecurityConfig;
 import com.mevent.mevent.dto.EventUserDTO;
 import com.mevent.mevent.dto.SimpleUserDTO;
+import com.mevent.mevent.dto.SimpleUserDetailsDTO;
 import com.mevent.mevent.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,14 @@ import java.util.List;
 public interface EventUserFeignClient {
 
     @GetMapping(value = "/event/{idEvent}",consumes = "application/json")
-    List<SimpleUserDTO> getAllEventsUser(@PathVariable("idEvent")Long idEvent);
+    List<SimpleUserDetailsDTO> getAllEventsUser(@PathVariable("idEvent")Long idEvent);
 
     @PostMapping(value = "",consumes = "application/json")
     EventUserDTO saveEventUser(@RequestBody EventUserDTO eventUserDto);
-
-
     @DeleteMapping(value="/delete_participant/{idEvent}/{idUser}", consumes = "application/json")
     void deleteByEventAndUser(@PathVariable("idEvent") Long idEvent, @PathVariable("idUser") Long idUser);
+
+    @GetMapping(value="/by_participant/{idUser}", consumes = "application/json")
+    List<Long> getIdsProjectByParticipant( @PathVariable("idUser") Long idUser);
+
 }

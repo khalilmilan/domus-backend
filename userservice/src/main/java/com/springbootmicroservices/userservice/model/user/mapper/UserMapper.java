@@ -13,7 +13,9 @@ public class UserMapper {
                 user.getIdUser(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getPhoto()
+                user.getPhoto(),
+                user.getGender().toString(),
+                user.getEmail()
         );
         return simpleUserDto;
     }

@@ -10,6 +10,7 @@ public class SurveyValueMapper {
                 surveyValue.getIdSurveyValue(),
                 surveyValue.getTitle(),
                 surveyValue.getDescription(),
+                surveyValue.getColorCode(),
                 surveyValue.getStatus(),
                 surveyValue.getIdSurvey(),
                 surveyValue.getIdUser(),
@@ -23,6 +24,7 @@ public class SurveyValueMapper {
                 surveyDto.getIdSurveyValue(),
                 surveyDto.getTitle(),
                 surveyDto.getDescription(),
+                surveyDto.getColorCode(),
                 surveyDto.getStatus(),
                 surveyDto.getIdSurvey(),
                 surveyDto.getIdUser()

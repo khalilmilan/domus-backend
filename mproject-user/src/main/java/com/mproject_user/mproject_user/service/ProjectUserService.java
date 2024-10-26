@@ -20,4 +20,9 @@ public interface ProjectUserService {
     void updateProjectUser(Long id, ProjectUser projectUser) throws ProjectUserException;
     List<SimpleUserDTO> getProjectUserByProject(Long idProject);
     List<ProjectDTO> getProjectUserByUser(Long idUser);
+    void deleteProjectUserByIdProjectIdUser(Long idProject,Long idUser) throws ProjectUserException;
+
+    List<SimpleUserDTO> getPossibleUser(Long idProject);
+
+    List<Long> getProjectByParticipant(Long idUser);
 }

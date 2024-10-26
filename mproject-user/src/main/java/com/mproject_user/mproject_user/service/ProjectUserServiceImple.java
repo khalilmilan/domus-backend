@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class ProjectUserServiceImple implements ProjectUserService{
@@ -84,7 +86,7 @@ public class ProjectUserServiceImple implements ProjectUserService{
 
     @Override
     public List<SimpleUserDTO> getProjectUserByProject(Long idProject) {
-        List<ProjectUser> projectsUser = projectUserRepository.findAll();
+        List<ProjectUser> projectsUser = projectUserRepository.findProjectUserByIdProject(idProject);
         List<SimpleUserDTO> membres= new ArrayList<>();
         if (projectsUser.size() > 0) {
             for (ProjectUser projectUser : projectsUser) {
@@ -110,5 +112,30 @@ public class ProjectUserServiceImple implements ProjectUserService{
         }else {
             return new ArrayList<ProjectDTO>();
         }
+    }
+
+    @Override
+    public void deleteProjectUserByIdProjectIdUser(Long idProject, Long idUser) throws ProjectUserException {
+        Optional<ProjectUser> projectUserOptional = Optional.ofNullable(projectUserRepository.findProjectUserByIdProjectAndIdUser(idProject, idUser));
+        if (!projectUserOptional.isPresent()) {
+            throw new ProjectUserException(ProjectUserException.NotFoundException(idProject));
+        } else {
+            projectUserRepository.deleteById(projectUserOptional.get().getIdProjectUser());
+        }
+    }
+
+    @Override
+    public List<SimpleUserDTO> getPossibleUser(Long idProject) {
+        List<Long> userIdsInEvent = projectUserRepository.findUsersInProject(idProject);
+        List<SimpleUserDTO> allUsers = userFeignClient.getAllSimpleUser();
+        List<SimpleUserDTO> usersNotIn = allUsers.stream()
+                .filter(user -> !userIdsInEvent.contains(user.getIdUser()))
+                .collect(Collectors.toList());
+        return usersNotIn;
+    }
+
+    @Override
+    public List<Long> getProjectByParticipant(Long idUser) {
+        return projectUserRepository.findProjectByParticipant(idUser);
     }
 }

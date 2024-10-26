@@ -74,4 +74,13 @@ public class SurveyController {
         List<SurveyDTO> surveys = surveyService.getALLSurveyByUser(idUser);
         return new ResponseEntity<>(surveys, surveys.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
+    @GetMapping("/count_survey_by_user/{idUser}")
+    public int getSurveyCountByUser(@PathVariable("idUser") Long idUser){
+        return surveyService.getCountSurveyByUser(idUser);
+    }
+    @GetMapping("/by_participant/{idUser}")
+    public List<SurveyDTO> getALLSurveyByParticipant(@PathVariable("idUser") Long idUser){
+        return surveyService.getALLSurveyByParticipant(idUser);
+    }
+
 }

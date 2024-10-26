@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class GroupeUserImple implements GroupeUserService{
@@ -109,5 +111,20 @@ public class GroupeUserImple implements GroupeUserService{
         } else {
             groupeUserRepository.deleteById(groupeUserOptional.get().getIdGroupeUser());
         }
+    }
+
+    @Override
+    public List<SimpleUserDTO> getPossibleUser(Long idGroupe) {
+        List<Long> userIdsInEvent = groupeUserRepository.findUsersInEvent(idGroupe);
+        List<SimpleUserDTO> allUsers = userFeignClient.getAllSimpleUser();
+        List<SimpleUserDTO> usersNotIn = allUsers.stream()
+                .filter(user -> !userIdsInEvent.contains(user.getIdUser()))
+                .collect(Collectors.toList());
+        return usersNotIn;
+    }
+
+    @Override
+    public List<Long> findGroupeByMembre(Long idUser) {
+        return groupeUserRepository.findGroupeByMembre(idUser);
     }
 }

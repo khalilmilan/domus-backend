@@ -1,4 +1,4 @@
-package com.mevent.mevent.dto;
+package com.mproject.mproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUserDTO {
-    private Long idEvent;
+public class ProjectUserDTO {
+
+    private Long idProject;
     private Long idUser;
     private Integer status;
 }

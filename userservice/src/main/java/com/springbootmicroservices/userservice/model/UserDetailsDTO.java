@@ -1,5 +1,6 @@
 package com.springbootmicroservices.userservice.model;
 
+import com.springbootmicroservices.userservice.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,12 +10,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimpleUserDTO {
-    private Long idUser;
-    private String firstName;
-    private String lastName;
-    private String photo;
-    private String gender;
-    private String email;
-
+public class UserDetailsDTO {
+    User user;
+    int countSurvey;
+    int countProject;
+    int countEvent;
 }

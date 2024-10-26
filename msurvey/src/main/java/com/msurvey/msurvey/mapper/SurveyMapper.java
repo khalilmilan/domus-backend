@@ -1,5 +1,6 @@
 package com.msurvey.msurvey.mapper;
 
+import com.msurvey.msurvey.dto.GroupeDTO;
 import com.msurvey.msurvey.dto.SimpleUserDTO;
 import com.msurvey.msurvey.dto.SurveyDTO;
 import com.msurvey.msurvey.model.Survey;
@@ -13,8 +14,12 @@ public class SurveyMapper {
                 survey.getTitle(),
                 survey.getDescription(),
                 survey.getStatus(),
+                survey.getStartDate(),
+                survey.getEndDate(),
                 survey.getIdUser(),
                 new SimpleUserDTO(),
+                survey.getIdGroupe(),
+                new GroupeDTO(),
                 new ArrayList<>(),
                 new ArrayList<>()
 
@@ -28,7 +33,10 @@ public class SurveyMapper {
                 surveyDto.getTitle(),
                 surveyDto.getDescription(),
                 surveyDto.getStatus(),
-                surveyDto.getIdUser()
+                surveyDto.getStartDate(),
+                surveyDto.getEndDate(),
+                surveyDto.getIdUser(),
+                surveyDto.getIdGroupe()
         );
         return survey;
     }

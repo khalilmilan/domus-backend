@@ -1,4 +1,4 @@
-package com.mevent.mevent.dto;
+package com.mevent_user.mevent_user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventUserDTO {
-    private Long idEvent;
-    private Long idUser;
-    private Integer status;
+public class SimpleUserDetailsDTO {
+    SimpleUserDTO user;
+    Integer answer;
 }

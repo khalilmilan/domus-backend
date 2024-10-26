@@ -17,6 +17,7 @@ public class SurveyValue extends BaseEntity{
     private Long idSurveyValue;
     private String title;
     private String description;
+    private String colorCode;
     private Integer status;
     private Long idSurvey;
     private Long idUser;

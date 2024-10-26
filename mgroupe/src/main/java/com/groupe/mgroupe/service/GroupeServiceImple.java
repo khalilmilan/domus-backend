@@ -122,4 +122,43 @@ public class GroupeServiceImple implements GroupeService{
             throw new GroupeException(GroupeException.NotFoundException(idGroupe));
         }
     }
+
+    @Override
+    public List<GroupeDTO> getGroupeByUser(Long idUser) {
+        List<Groupe> groupes = groupeRepository.findGroupesByIdUser(idUser);
+        List<GroupeDTO> groupeDto= new ArrayList<>();
+        if (groupes.size() > 0) {
+            for (Groupe groupe : groupes) {
+                GroupeDTO dto = GroupeMapper.mapToGroupeDto(groupe);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                List<SimpleUserDTO> membres =  groupeUserFeignClient.getAllUser(dto.getIdGroupe());
+                dto.setMembres(membres);
+                groupeDto.add(dto);
+            }
+            return groupeDto;
+        }else {
+            return new ArrayList<GroupeDTO>();
+        }
+    }
+
+    @Override
+    public List<GroupeDTO> getGroupeByMembre(Long idUser) {
+        List<Long> idsGroupe = groupeUserFeignClient.getGroupebyMembre(idUser);
+        List<Groupe> groupes = groupeRepository.findAllById(idsGroupe);
+        List<GroupeDTO> groupeDto= new ArrayList<>();
+        if (groupes.size() > 0) {
+            for (Groupe groupe : groupes) {
+                GroupeDTO dto = GroupeMapper.mapToGroupeDto(groupe);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                List<SimpleUserDTO> membres =  groupeUserFeignClient.getAllUser(dto.getIdGroupe());
+                dto.setMembres(membres);
+                groupeDto.add(dto);
+            }
+            return groupeDto;
+        }else {
+            return new ArrayList<GroupeDTO>();
+        }
+    }
 }

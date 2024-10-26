@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -72,8 +73,12 @@ public class ForumController {
         }
     }
     @GetMapping("/forums_by_event/{idEvent}")
-    public ResponseEntity<List<ForumDTO>> getAllForumByEvent(@PathVariable("idEvent")Long idEvent) {
+    public List<ForumDTO> getAllForumByEvent(@PathVariable("idEvent")Long idEvent) {
         List<ForumDTO> forums = forumService.getForumsByEvent(idEvent);
-        return new ResponseEntity<>(forums, forums.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        if(forums.size() > 0){
+            return forums;
+        }else{
+            return new ArrayList<>();
+        }
     }
 }

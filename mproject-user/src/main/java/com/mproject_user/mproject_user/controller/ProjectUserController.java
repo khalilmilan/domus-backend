@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.events.EventException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,25 @@ public class ProjectUserController {
 
                 }else{
                         return new ArrayList<>();
-
                 }
         }
+        @DeleteMapping("/delete_participant/{idProject}/{idUser}")
+        public void deleteByProjectAndUser(@PathVariable("idProject") Long idProject,@PathVariable("idUser") Long idUser) throws ProjectUserException{
+                try{
+                        projectUserService.deleteProjectUserByIdProjectIdUser(idProject,idUser);
+                }
+                catch (EventException e)
+                {
+                }
+        }
+        @GetMapping("/not_in/{idProject}")
+        List<SimpleUserDTO> getAllPossibleUser(@PathVariable("idProject")Long idProject){
+                List<SimpleUserDTO> participants = projectUserService.getPossibleUser(idProject);
+                return participants;
+        }
+        @GetMapping("/by_participant/{idUser}")
+        List<Long> getIdsProjectByParticipant(@PathVariable("idUser")Long idUser){
+                return projectUserService.getProjectByParticipant(idUser);
+        }
+
 }

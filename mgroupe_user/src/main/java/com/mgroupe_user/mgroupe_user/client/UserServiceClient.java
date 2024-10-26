@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  * Feign client interface named {@link UserServiceClient} for interacting with the User Service.
  * Provides methods to validate tokens and retrieve authentication information.
@@ -39,4 +41,6 @@ public interface UserServiceClient {
 
     @GetMapping(value = "/theni")
     void tests();
+    @GetMapping(value="/get_All_simple_user",consumes = "application/json")
+    List<SimpleUserDTO> getAllSimpleUser();
 }

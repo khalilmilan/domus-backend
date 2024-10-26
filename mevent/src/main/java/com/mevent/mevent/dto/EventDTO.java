@@ -1,4 +1,5 @@
 package com.mevent.mevent.dto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
@@ -14,10 +15,11 @@ public class EventDTO {
     private String label;
     private String description;
     private Long idUser;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private Integer status;
     private SimpleUserDTO user;
-    private List<SimpleUserDTO> participants;
+    private List<SimpleUserDetailsDTO> participants;
     private List<ForumDTO> forums;
 
 }

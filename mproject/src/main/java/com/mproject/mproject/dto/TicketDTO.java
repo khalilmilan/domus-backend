@@ -17,7 +17,7 @@ public class TicketDTO {
     private Integer status;
     private Long idUser;
     private Long idProject;
-
     private SimpleUserDTO user;
     private ProjectDTO project;
+    private SimpleUserDTO UserAffectedTo;
 }

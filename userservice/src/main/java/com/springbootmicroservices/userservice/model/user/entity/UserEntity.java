@@ -59,7 +59,6 @@ public class UserEntity extends BaseEntity {
     private Date birthDate;
     private Long idRank;
     private Long idRole;
-
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

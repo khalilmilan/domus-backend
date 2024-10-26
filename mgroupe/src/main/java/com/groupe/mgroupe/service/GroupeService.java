@@ -21,5 +21,9 @@ public interface GroupeService {
     void addMembre(Long idGroupe, Long idUser) throws GroupeException;
 
     void removeMembre(Long idGroupe, Long idUser) throws GroupeException;
+    List<GroupeDTO> getGroupeByUser(Long idUser) ;
+    List<GroupeDTO> getGroupeByMembre(Long idUser);
+
+
 
 }

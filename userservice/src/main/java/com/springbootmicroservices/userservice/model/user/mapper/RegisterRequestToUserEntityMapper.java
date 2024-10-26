@@ -36,6 +36,8 @@ public interface RegisterRequestToUserEntityMapper extends BaseMapper<RegisterRe
                 .firstName(userRegisterRequest.getFirstName())
                 .lastName(userRegisterRequest.getLastName())
                 .phoneNumber(userRegisterRequest.getPhoneNumber())
+                .adresse(userRegisterRequest.getAdresse())
+                .birthDate(userRegisterRequest.getBirthDate())
                 .userType(userType)
                 .gender(userGender)
                 .build();

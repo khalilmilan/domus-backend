@@ -13,6 +13,8 @@ public class ProjectMapper {
                 project.getTitle(),
                 project.getDescription(),
                 project.getStatus(),
+                project.getStartDate(),
+                project.getEndDate(),
                 project.getIdUser(),
                 new SimpleUserDTO(),
                 new ArrayList<>(),
@@ -28,6 +30,8 @@ public class ProjectMapper {
                 projectDto.getTitle(),
                 projectDto.getDescription(),
                 projectDto.getStatus(),
+                projectDto.getStartDate(),
+                projectDto.getEndDate(),
                 projectDto.getIdUser()
         );
         return project;

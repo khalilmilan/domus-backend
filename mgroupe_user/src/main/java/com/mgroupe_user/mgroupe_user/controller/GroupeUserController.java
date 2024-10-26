@@ -51,10 +51,8 @@ public class GroupeUserController {
         }
         catch (GroupeUserException e)
         {
-
         }
     }
-
     @PutMapping("/{idGroupeUser}")
     public ResponseEntity<?> updateById(@PathVariable("idGroupeUser") Long idGroupeUser, @RequestBody GroupeUser groupeUser)
     {
@@ -84,7 +82,15 @@ public class GroupeUserController {
         }
         catch (GroupeUserException e)
         {
-
         }
+    }
+    @GetMapping("/not_in/{idGroupe}")
+    List<SimpleUserDTO> getAllPossibleUser(@PathVariable("idGroupe")Long idGroupe){
+        List<SimpleUserDTO> membres = groupeUserService.getPossibleUser(idGroupe);
+        return membres;
+    }
+    @GetMapping("/by_membre/{idUser}")
+    List<Long> getGroupebyMembre(@PathVariable("idUser") Long idUser){
+         return groupeUserService.findGroupeByMembre(idUser);
     }
 }

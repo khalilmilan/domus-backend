@@ -1,16 +1,11 @@
 package com.msurvey.msurvey.service;
 
-import com.msurvey.msurvey.client.UserServiceClient;
-import com.msurvey.msurvey.client.VoteFeignClient;
-import com.msurvey.msurvey.dto.SimpleUserDTO;
-import com.msurvey.msurvey.dto.SurveyDTO;
-import com.msurvey.msurvey.dto.SurveyValueDTO;
-import com.msurvey.msurvey.dto.VoteDTO;
+import com.msurvey.msurvey.client.*;
+import com.msurvey.msurvey.dto.*;
 import com.msurvey.msurvey.exception.SurveyException;
 import com.msurvey.msurvey.mapper.SurveyMapper;
 import com.msurvey.msurvey.model.Survey;
 import com.msurvey.msurvey.repository.SurveyRepository;
-import com.msurvey.msurvey.client.SurveyValueFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +24,8 @@ public class SurveyServiceImple implements SurveyService {
     private SurveyRepository surveyRepository;
     private UserServiceClient userFeignClient;
     private SurveyValueFeignClient surveyValueFeignClient;
+    private GroupeFeignClient groupeFeignClient;
+    private GroupeUserFeignClient groupeUserFeignClient;
 
     private VoteFeignClient voteFeignClient;
     @Override
@@ -84,6 +81,10 @@ public class SurveyServiceImple implements SurveyService {
             dto.setValues(values);
             List<VoteDTO> votes = voteFeignClient.getVoteBySurvey(dto.getIdSurvey());
             dto.setVotes(votes);
+            if(null!=dto.getIdGroupe()){
+                GroupeDTO groupe = groupeFeignClient.getGroupe(dto.getIdGroupe());
+                dto.setGroupe(groupe);
+            }
             return dto;
         }
     }
@@ -97,6 +98,9 @@ public class SurveyServiceImple implements SurveyService {
             surveyToUpdate.setTitle(survey.getTitle());
             surveyToUpdate.setDescription(survey.getDescription());
             surveyToUpdate.setStatus(survey.getStatus());
+            surveyToUpdate.setIdGroupe(survey.getIdGroupe());
+            surveyToUpdate.setStartDate(survey.getStartDate());
+            surveyToUpdate.setEndDate(survey.getEndDate());
             survey.setUpdatedAt(LocalDateTime.now());
             surveyRepository.save(surveyToUpdate);
         }
@@ -119,6 +123,42 @@ public class SurveyServiceImple implements SurveyService {
                 dto.setValues(values);
                 List<VoteDTO> votes = voteFeignClient.getVoteBySurvey(dto.getIdSurvey());
                 dto.setVotes(votes);
+                if(null!=survey.getIdGroupe()){
+                    GroupeDTO groupe = groupeFeignClient.getGroupe(survey.getIdGroupe());
+                    dto.setGroupe(groupe);
+                }
+                surveysDto.add(dto);
+            }
+            return surveysDto;
+        }else {
+            return new ArrayList<SurveyDTO>();
+        }
+    }
+
+    @Override
+    public int getCountSurveyByUser(Long idUser) {
+        List<Survey> surveys = surveyRepository.findSurveyByIdUser(idUser);
+        return surveys.size();
+    }
+
+    @Override
+    public List<SurveyDTO> getALLSurveyByParticipant(Long idUser) {
+        List<Long> idsGroupe = groupeUserFeignClient.getGroupebyMembre(idUser);
+        List<Survey> surveys = surveyRepository.findAllById(idsGroupe);
+        List<SurveyDTO> surveysDto= new ArrayList<>();
+        if (surveys.size() > 0) {
+            for (Survey survey : surveys) {
+                SurveyDTO dto = SurveyMapper.mapToSurveyDto(survey);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                List<SurveyValueDTO> values = surveyValueFeignClient.getSurveyesBySurvey(dto.getIdSurvey());
+                dto.setValues(values);
+                List<VoteDTO> votes = voteFeignClient.getVoteBySurvey(dto.getIdSurvey());
+                dto.setVotes(votes);
+                if(null!=survey.getIdGroupe()){
+                    GroupeDTO groupe = groupeFeignClient.getGroupe(survey.getIdGroupe());
+                    dto.setGroupe(groupe);
+                }
                 surveysDto.add(dto);
             }
             return surveysDto;

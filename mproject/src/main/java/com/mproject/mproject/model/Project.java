@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,6 +20,8 @@ public class Project extends BaseEntity{
     private String title;
     private String description;
     private Integer status;
+    private Date startDate;
+    private Date endDate;
     private Long idUser;
 
 }

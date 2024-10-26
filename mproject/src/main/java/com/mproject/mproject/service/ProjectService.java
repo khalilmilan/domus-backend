@@ -20,4 +20,11 @@ public interface ProjectService {
     void updateProject(Long id, Project project) throws ProjectException;
 
     List<ProjectDTO> getProjectByUser(Long idUser);
+    void addPartipant(Long idProject, Long idUser) throws ProjectException;
+
+    void removeParticiapant(Long idProject, Long idUser) throws ProjectException;
+
+    int getCountProjectByUser(Long idUser);
+
+    List<ProjectDTO> getProjectByParticipant(Long idUser);
 }

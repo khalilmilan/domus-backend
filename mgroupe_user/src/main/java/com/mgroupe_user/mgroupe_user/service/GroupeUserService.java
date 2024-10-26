@@ -18,8 +18,13 @@ public interface GroupeUserService {
 
     GroupeUserDTO getGroupeUser(Long idGroupeUser) throws GroupeUserException;
 
-    public void updateGroupeUser(Long id, GroupeUser groupe) throws GroupeUserException;
+     void updateGroupeUser(Long id, GroupeUser groupe) throws GroupeUserException;
 
-    public List<SimpleUserDTO> getGroupeUserByGroupe(Long idGroupe);
-    public void deleteGroupeUserByIdGroupeIdUser(Long idGroupe,Long idUser) throws GroupeUserException;
+     List<SimpleUserDTO> getGroupeUserByGroupe(Long idGroupe);
+     void deleteGroupeUserByIdGroupeIdUser(Long idGroupe,Long idUser) throws GroupeUserException;
+    List<SimpleUserDTO> getPossibleUser(Long idGroupe);
+
+    List<Long> findGroupeByMembre(Long idUser);
+
+
 }

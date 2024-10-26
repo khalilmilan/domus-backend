@@ -9,6 +9,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.events.EventException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,6 @@ public class ProjectController {
             return new ProjectDTO();
         }
     }
-
     @DeleteMapping("/{idProject}")
     public ResponseEntity<?> deleteById(@PathVariable("idProject") Long idProject) throws ProjectException{
         try{
@@ -69,7 +69,6 @@ public class ProjectController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
     @GetMapping("/by_user/{idUser}")
     public List<ProjectDTO> getProjectByUser(@PathVariable("idUser") Long idUser) {
         List<ProjectDTO> projects = projectService.getProjectByUser(idUser);
@@ -80,5 +79,35 @@ public class ProjectController {
 
         }
     }
+    @PostMapping("/add_membre/{idProject}/{idUser}")
+    public ResponseEntity<?> addParticiapant(@PathVariable("idProject") Long idProject,@PathVariable("idUser") Long idUser){
+        try{
+            projectService.addPartipant(idProject,idUser);
+            return new ResponseEntity<>("Successfully added participant with id "+idUser+"in project:"+idProject, HttpStatus.OK);
+        }
+        catch (ProjectException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
+    @DeleteMapping("/delete_memebre/{idProject}/{idUser}")
+    public ResponseEntity<?> deleteByEventUser(@PathVariable("idProject") Long idProject,@PathVariable("idUser") Long idUser) throws EventException{
+        try{
+            projectService.removeParticiapant(idProject,idUser);
+            return new ResponseEntity<>("Successfully deleted particiapant with id "+idUser+"from project :"+idProject, HttpStatus.OK);
+        }
+        catch (ProjectException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/count_by_user/{idUser}")
+    public int getProjectCountByUser(@PathVariable("idUser") Long idUser) {
+        return projectService.getCountProjectByUser(idUser);
+    }
+    @GetMapping("/by_participant/{idUser}")
+    public List<ProjectDTO> getProjectByParticipant(@PathVariable("idUser") Long idUser) {
+        return projectService.getProjectByParticipant(idUser);
+    }
 }

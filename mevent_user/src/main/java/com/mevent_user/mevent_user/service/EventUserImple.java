@@ -4,6 +4,7 @@ import com.mevent_user.mevent_user.client.UserServiceClient;
 import com.mevent_user.mevent_user.dto.EventUserDTO;
 import com.mevent_user.mevent_user.dto.SimpleUserDTO;
 
+import com.mevent_user.mevent_user.dto.SimpleUserDetailsDTO;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.mapper.EventUserMapper;
 import com.mevent_user.mevent_user.model.EventUser;
@@ -12,11 +13,14 @@ import com.mevent_user.mevent_user.repository.EventUserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class EventUserImple implements EventUserService{
@@ -88,19 +92,21 @@ public class EventUserImple implements EventUserService{
     }
 
     @Override
-    public List<SimpleUserDTO> getEventUserByEvent(Long idEvent) {
+    public List<SimpleUserDetailsDTO> getEventUserByEvent(Long idEvent) {
         List<EventUser> events = eventUserRepository.findEventUserByIdEvent(idEvent);;
-        List<SimpleUserDTO> userDtos = new ArrayList<>();
+        List<SimpleUserDetailsDTO> userDtos = new ArrayList<>();
         if (events.size() > 0) {
             for (EventUser event : events) {
-                EventUserDTO dto =EventUserMapper.mapToEventUserDto(event);
-                SimpleUserDTO userDto =  userFeignClient.getSimpleUser(dto.getIdUser());
-                userDtos.add(userDto);
-
+                EventUserDTO dto = EventUserMapper.mapToEventUserDto(event);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                SimpleUserDetailsDTO simpleUserDetailsDTO = new SimpleUserDetailsDTO();
+                simpleUserDetailsDTO.setUser(userDto);
+                simpleUserDetailsDTO.setAnswer(dto.getStatus());
+                userDtos.add(simpleUserDetailsDTO);
             }
             return userDtos;
         }else {
-            return new ArrayList<SimpleUserDTO>();
+            return new ArrayList<SimpleUserDetailsDTO>();
         }
     }
 
@@ -111,6 +117,40 @@ public class EventUserImple implements EventUserService{
             throw new EventUserException(EventUserException.NotFoundException(idEvent));
         } else {
             eventUserRepository.deleteById(eventUserOptional.get().getIdEventUser());
+        }
+    }
+    @Override
+    public List<SimpleUserDTO> getPossibleUser(Long idEvent) {
+        List<Long> userIdsInEvent = eventUserRepository.findUsersInEvent(idEvent);
+        List<SimpleUserDTO> allUsers = userFeignClient.getAllSimpleUser();
+        List<SimpleUserDTO> usersNotIn = allUsers.stream()
+                .filter(user -> !userIdsInEvent.contains(user.getIdUser()))
+                .collect(Collectors.toList());
+        return usersNotIn;
+    }
+
+    @Override
+    public List<Long> getEventByParticipant(Long idUser) {
+        return eventUserRepository.findEventByParticipant(idUser);
+    }
+
+    @Override
+    public EventUserDTO getParticipantAnswer(Long idEvent, Long idUser) {
+        Optional<EventUser> eventUserOptional = Optional.ofNullable(eventUserRepository.findEventUserByIdEventAndIdUser(idEvent, idUser));
+        if (eventUserOptional.isPresent()) {
+           return  EventUserMapper.mapToEventUserDto(eventUserOptional.get());
+        } else {
+            return new EventUserDTO();
+        }
+    }
+
+    @Override
+    public void updateAnswer(Long idEvent, Long idUser, Integer newAnswer) throws EventUserException {
+        Optional<EventUser> eventUserOptional = Optional.ofNullable(eventUserRepository.findEventUserByIdEventAndIdUser(idEvent, idUser));
+        if (eventUserOptional.isPresent()) {
+            EventUser eventUser = eventUserOptional.get();
+            eventUser.setStatus(newAnswer);
+            eventUserRepository.save(eventUser);
         }
     }
 }

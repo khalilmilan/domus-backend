@@ -2,6 +2,7 @@ package com.mevent_user.mevent_user.controller;
 
 import com.mevent_user.mevent_user.dto.EventUserDTO;
 import com.mevent_user.mevent_user.dto.SimpleUserDTO;
+import com.mevent_user.mevent_user.dto.SimpleUserDetailsDTO;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.model.EventUser;
 import com.mevent_user.mevent_user.service.EventUserService;
@@ -74,8 +75,8 @@ public class EventUserController {
     }
 
     @GetMapping("/event/{idEvent}")
-    List<SimpleUserDTO> getAllEventsUser(@PathVariable("idEvent")Long idEvent){
-        List<SimpleUserDTO> participants = eventUserService.getEventUserByEvent(idEvent);
+    List<SimpleUserDetailsDTO> getAllEventsUser(@PathVariable("idEvent")Long idEvent){
+        List<SimpleUserDetailsDTO> participants = eventUserService.getEventUserByEvent(idEvent);
         return participants;
     }
     @GetMapping("/khalil/test")
@@ -87,12 +88,41 @@ public class EventUserController {
     public void deleteByEventAndUser(@PathVariable("idEvent") Long idEvent,@PathVariable("idUser") Long idUser) throws EventUserException{
         try{
             eventUserService.deleteEventUserByIdEventIdUser(idEvent,idUser);
-
         }
         catch (EventException e)
         {
 
         }
     }
+    @GetMapping("/not_in/{idEvent}")
+    List<SimpleUserDTO> getAllPossibleUser(@PathVariable("idEvent")Long idEvent){
+        List<SimpleUserDTO> participants = eventUserService.getPossibleUser(idEvent);
+        return participants;
+    }
 
+    @GetMapping("/by_participant/{idUser}")
+    List<Long> getIdsProjectByParticipant(@PathVariable("idUser") Long idUser){
+        return eventUserService.getEventByParticipant(idUser);
+    }
+    @GetMapping("/get_answer/{idEvent}/{idUser}")
+    public EventUserDTO getAnswer(@PathVariable("idEvent") Long idEvent,@PathVariable("idUser") Long idUser) {
+         return   eventUserService.getParticipantAnswer(idEvent,idUser);
+    }
+    @PutMapping("/update_answer/{idEvent}/{idUser}/{newAnswer}")
+    public ResponseEntity<?> updateAnswer(@PathVariable("idEvent") Long idEvent,
+                                          @PathVariable("idUser") Long idUser,
+                                          @PathVariable("newAnswer") Integer newAnswer)
+    {
+        try {
+            eventUserService.updateAnswer(idEvent,idUser,newAnswer);
+            return new ResponseEntity<>("Updated eventUser with eventId "+idEvent+"", HttpStatus.OK);
+        }
+        catch(ConstraintViolationException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (EventUserException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -33,11 +33,12 @@ public class EventController {
     }
 
     @GetMapping("/{idEvent}")
-    public EventDTO getEvent(@PathVariable("idEvent") Long idEvent) throws EventException {
+    public ResponseEntity<EventDTO> getEvent(@PathVariable("idEvent") Long idEvent) throws EventException {
         try {
-            return eventService.getEvent(idEvent);
+            return  new ResponseEntity<>(eventService.getEvent(idEvent),HttpStatus.OK);
         } catch (EventException e) {
-            return new EventDTO();
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new EventDTO());
         }
     }
 
@@ -70,7 +71,6 @@ public class EventController {
     }
     @PostMapping("/add_participant/{idEvent}/{idUser}")
     public ResponseEntity<?> addParticiapant(@PathVariable("idEvent") Long idEvent,@PathVariable("idUser") Long idUser){
-
         try{
              eventService.addPartipant(idEvent,idUser);
             return new ResponseEntity<>("Successfully added participant with id "+idUser+"in event:"+idEvent, HttpStatus.OK);
@@ -91,5 +91,18 @@ public class EventController {
         {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/byUser/{idUser}")
+    public ResponseEntity<List<EventDTO>> getEventByUser(@PathVariable("idUser") Long idUser) throws EventException {
+        List<EventDTO> events = eventService.getEventsByUser(idUser);
+        return new ResponseEntity<>(events, events.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/count_event_by_user/{idUser}")
+    public int getCountEventByUser(@PathVariable("idUser") Long idUser) throws EventException {
+        return eventService.getCountEventByUser(idUser);
+    }
+    @GetMapping("/get_event_by_participant/{idUser}")
+    public List<EventDTO> getEventsByParticipant(@PathVariable("idUser") Long idUser){
+        return eventService.getEventByParticipant(idUser);
     }
 }

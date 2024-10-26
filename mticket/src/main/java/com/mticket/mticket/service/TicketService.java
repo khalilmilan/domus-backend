@@ -16,8 +16,9 @@ public interface TicketService {
     TicketDTO getTicket(Long idTicket) throws TicketException;
 
     void updateTicket(Long id, Ticket ticket) throws TicketException;
-
     List<TicketDTO> getTicketByUser(Long idUser);
     List<TicketDTO> getTicketByAffectedTo(Long affectedTO);
     List<TicketDTO> getTicketByProject(Long idProject);
+
+    List<TicketDTO> getTicketByProjectAndIdUser(Long idProject, Long idUser);
 }

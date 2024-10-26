@@ -10,4 +10,6 @@ public interface TicketRepository extends JpaRepository<Ticket,Long> {
     List<Ticket> findTicketByIdUser(Long idUser);
     List<Ticket> findTicketByAffectedTo(Long affectedTo);
 
+    List<Ticket> findTicketByAffectedToAndIdProject(Long affectedTo,Long idProject);
+
 }

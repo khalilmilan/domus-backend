@@ -2,8 +2,11 @@ package com.springbootmicroservices.userservice.model.user.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Date;
 
 /**
  * Represents a request named {@link RegisterRequest} for user registration.
@@ -35,7 +38,11 @@ public class RegisterRequest {
 
     @NotBlank(message = "Role can't be blank.")
     private String role;
-
+    @NotBlank(message = "gender can't be blank.")
     private String gender;
+    @NotNull(message = "birthDate  can't be blank.")
+    private Date birthDate;
+
+    private String adresse;
 
 }

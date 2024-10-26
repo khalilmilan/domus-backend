@@ -2,6 +2,7 @@ package com.mproject.mproject.service;
 
 import com.mproject.mproject.client.UserServiceClient;
 import com.mproject.mproject.dto.ProjectDTO;
+import com.mproject.mproject.dto.ProjectUserDTO;
 import com.mproject.mproject.dto.SimpleUserDTO;
 import com.mproject.mproject.dto.TicketDTO;
 import com.mproject.mproject.exception.ProjectException;
@@ -14,7 +15,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import org.w3c.dom.events.EventException;
 
 
 import java.time.LocalDateTime;
@@ -92,6 +93,8 @@ public class ProjectServiceImple implements ProjectService{
             Project projectToUpdate=projectWithId.get();
             projectToUpdate.setTitle(project.getTitle());
             projectToUpdate.setDescription(project.getDescription());
+            projectToUpdate.setStartDate(project.getStartDate());
+            projectToUpdate.setEndDate(project.getEndDate());
             projectToUpdate.setStatus(project.getStatus());
             projectRepository.save(projectToUpdate);
         }
@@ -104,6 +107,60 @@ public class ProjectServiceImple implements ProjectService{
     @Override
     public List<ProjectDTO> getProjectByUser(Long idUser) {
         List<Project> projects = projectRepository.findProjectsByIdUser(idUser);
+        List<ProjectDTO> projectsDto= new ArrayList<>();
+        if (projects.size() > 0) {
+            for (Project project : projects) {
+                ProjectDTO dto = ProjectMapper.mapToProjectDto(project);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                projectsDto.add(dto);
+            }
+            return projectsDto;
+        }else {
+            return new ArrayList<ProjectDTO>();
+        }
+    }
+
+    @Override
+    public void addPartipant(Long idProject, Long idUser) throws ProjectException{
+        Optional<Project> projectWithId = projectRepository.findById(idProject);
+        if(projectWithId.isPresent())
+        {
+            ProjectUserDTO projectUserDto = new ProjectUserDTO(
+                    idProject,
+                    idUser,
+                    1
+            );
+            ProjectUserDTO dto = projectUserFeignClient.saveProjectUser(projectUserDto);
+        }
+        else
+        {
+            throw new ProjectException(ProjectException.NotFoundException(idProject));
+        }
+    }
+
+    @Override
+    public void removeParticiapant(Long idProject, Long idUser) throws ProjectException{
+        Optional<Project> projecttWithId = projectRepository.findById(idProject);
+        if(projecttWithId.isPresent())
+        {
+            projectUserFeignClient.deleteByProjectAndUser(idProject,idUser);
+        }
+        else
+        {
+            throw new ProjectException(ProjectException.NotFoundException(idProject));
+        }
+    }
+
+    @Override
+    public int getCountProjectByUser(Long idUser) {
+        return projectRepository.findProjectsByIdUser(idUser).size();
+    }
+
+    @Override
+    public List<ProjectDTO> getProjectByParticipant(Long idUser) {
+        List<Long> idsProject = projectUserFeignClient.getIdsProjectByParticipant(idUser);
+        List<Project> projects = projectRepository.findAllById(idsProject);
         List<ProjectDTO> projectsDto= new ArrayList<>();
         if (projects.size() > 0) {
             for (Project project : projects) {

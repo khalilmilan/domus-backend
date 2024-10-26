@@ -33,7 +33,7 @@ public class UserServiceImp implements IUserService{
             EventDetailsDTO  eventDetailsDTO = EventMapper.mapToEventDetailsDto(eventDto);
             SimpleUserDTO userDto = userFeignClient.getSimpleUser(eventDto.getIdUser());
             eventDetailsDTO.setUser(userDto);
-            List<SimpleUserDTO> participants =  eventUserFeignClient.getAllEventsUser(eventDetailsDTO.getIdEvent());
+            List<SimpleUserDetailsDTO> participants =  eventUserFeignClient.getAllEventsUser(eventDetailsDTO.getIdEvent());
             eventDetailsDTO.setParticipants(participants);
             List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(eventDetailsDTO.getIdEvent());
             eventDetailsDTO.setForums(forums);

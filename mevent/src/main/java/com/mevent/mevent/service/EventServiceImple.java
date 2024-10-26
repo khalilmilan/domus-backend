@@ -44,7 +44,7 @@ public class EventServiceImple implements EventService{
                 EventDTO dto = EventMapper.mapToEventDto(event);
                 SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
                 dto.setUser(userDto);
-                List<SimpleUserDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
+                List<SimpleUserDetailsDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
                 dto.setParticipants(participants);
                 List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
                 dto.setForums(forums);
@@ -77,7 +77,7 @@ public class EventServiceImple implements EventService{
             dto.setUser(userDto);
             List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
             dto.setForums(forums);
-            List<SimpleUserDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
+            List<SimpleUserDetailsDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
             dto.setParticipants(participants);
             return dto;
         }
@@ -92,6 +92,7 @@ public class EventServiceImple implements EventService{
             eventToUpdate.setLabel(event.getLabel());
             eventToUpdate.setDescription(event.getDescription());
             eventToUpdate.setStatus(event.getStatus());
+            eventToUpdate.setDate(event.getDate());
             eventRepository.save(eventToUpdate);
         }
         else
@@ -123,12 +124,59 @@ public class EventServiceImple implements EventService{
         Optional<Event> eventWithId = eventRepository.findById(idEvent);
         if(eventWithId.isPresent())
         {
-
             eventUserFeignClient.deleteByEventAndUser(idEvent,idUser);
         }
         else
         {
             throw new EventException(EventException.NotFoundException(idEvent));
+        }
+    }
+
+    @Override
+    public List<EventDTO> getEventsByUser(Long idUser) throws EventException {
+        List<Event> events = eventRepository.findEventsByIdUser(idUser);
+        List<EventDTO> eventDto= new ArrayList<>();
+        if (events.size() > 0) {
+            for (Event event : events) {
+                EventDTO dto = EventMapper.mapToEventDto(event);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                List<SimpleUserDetailsDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
+                dto.setParticipants(participants);
+                List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
+                dto.setForums(forums);
+                eventDto.add(dto);
+            }
+            return eventDto;
+        }else {
+            return new ArrayList<EventDTO>();
+        }
+    }
+
+    @Override
+    public int getCountEventByUser(Long idUser) {
+        return eventRepository.findEventsByIdUser(idUser).size();
+    }
+
+    @Override
+    public List<EventDTO> getEventByParticipant(Long idUser) {
+        List<Long> idsEvents = eventUserFeignClient.getIdsProjectByParticipant(idUser);
+        List<EventDTO> eventDto = new ArrayList<EventDTO>();
+        List<Event> events = eventRepository.findAllById(idsEvents);
+        if (events.size() > 0) {
+            for (Event event : events) {
+                EventDTO dto = EventMapper.mapToEventDto(event);
+                SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+                dto.setUser(userDto);
+                List<SimpleUserDetailsDTO> participants = eventUserFeignClient.getAllEventsUser(dto.getIdEvent());
+                dto.setParticipants(participants);
+                List<ForumDTO> forums = forumFeignClient.getAllForumByEvent(dto.getIdEvent());
+                dto.setForums(forums);
+                eventDto.add(dto);
+            }
+            return eventDto;
+        }else {
+            return new ArrayList<EventDTO>();
         }
     }
 }

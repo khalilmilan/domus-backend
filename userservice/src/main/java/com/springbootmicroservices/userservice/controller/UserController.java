@@ -3,6 +3,7 @@ package com.springbootmicroservices.userservice.controller;
 import com.springbootmicroservices.userservice.exception.UserNotFoundException;
 import com.springbootmicroservices.userservice.model.SimpleUserDTO;
 import com.springbootmicroservices.userservice.model.UserDTO;
+import com.springbootmicroservices.userservice.model.UserDetailsDTO;
 import com.springbootmicroservices.userservice.model.common.dto.response.CustomResponse;
 import com.springbootmicroservices.userservice.model.user.Token;
 import com.springbootmicroservices.userservice.model.user.User;
@@ -13,6 +14,7 @@ import com.springbootmicroservices.userservice.model.user.dto.request.TokenRefre
 import com.springbootmicroservices.userservice.model.user.dto.response.TokenResponse;
 import com.springbootmicroservices.userservice.model.user.mapper.TokenToTokenResponseMapper;
 import com.springbootmicroservices.userservice.service.*;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * REST controller named {@link UserController} for managing user-related operations.
@@ -142,6 +147,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new User());
         }
     }
+    @PutMapping("/{idUser}")
+    public ResponseEntity<?> updateById(@PathVariable("idUser") Long idUser, @RequestBody User user)
+    {
+        try {
+            userService.updateUser(idUser,user);
+            return new ResponseEntity<>("Updated user with id "+idUser+"", HttpStatus.OK);
+        }
+        catch(ConstraintViolationException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/get_simple_user/{idUser}")
     public SimpleUserDTO getSimpleUser(@PathVariable Long idUser)throws UserNotFoundException {
         try {
@@ -151,4 +172,24 @@ public class UserController {
             return new SimpleUserDTO();
         }
     }
+    @GetMapping("/get_All_simple_user")
+    public List<SimpleUserDTO> getAllSimpleUser()throws UserNotFoundException {
+        try {
+            return userService.getAllSimpleUser();
+        } catch (UserNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+    @GetMapping("/get_user_details/{idUser}")
+    public ResponseEntity<UserDetailsDTO> getUserDetails(@PathVariable("idUser") Long idUser) throws UserNotFoundException {
+
+        try {
+            return new ResponseEntity<>(userService.getUserDetails(idUser), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            //  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND).body(new UserDTO());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserDetailsDTO());
+        }
+    }
+
+
 }

@@ -14,6 +14,8 @@ public class SurveyValueDTO {
     private String title;
     private String description;
     private Integer status;
+    private String colorCode;
+
     private Long idSurvey;
     private Long idUser;
     private SimpleUserDTO user;

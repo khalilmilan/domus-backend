@@ -27,6 +27,6 @@ public class EventDetailsDTO {
 
     private SimpleUserDTO user;
 
-    private List<SimpleUserDTO> participants;
+    private List<SimpleUserDetailsDTO> participants;
     private List<ForumDTO> forums;
 }

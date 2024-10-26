@@ -13,11 +13,11 @@ public interface GroupeUserFeignClient {
 
     @GetMapping(value = "/groupe/{idGroupe}",consumes = "application/json")
     List<SimpleUserDTO> getAllUser(@PathVariable("idGroupe")Long idGroupe);
-
     @PostMapping(value = "",consumes = "application/json")
     GroupeUserDTO saveGroupeUser(@RequestBody GroupeUserDTO groupeUserDto);
-
-
     @DeleteMapping(value="/delete_membre/{idGroupe}/{idUser}")
     void deleteByGroupeAndUser(@PathVariable("idGroupe") Long idGroupe,@PathVariable("idUser") Long idUser);
+
+    @GetMapping(value = "/by_membre/{idUser}",consumes = "application/json")
+    List<Long> getGroupebyMembre(@PathVariable("idUser")Long idUser);
 }

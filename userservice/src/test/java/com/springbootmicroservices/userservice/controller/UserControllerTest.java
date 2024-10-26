@@ -59,7 +59,7 @@ class UserControllerTest extends AbstractRestControllerTest {
                 .build();
 
         final User mockUser = User.builder()
-                .id(UUID.randomUUID().toString())
+
                 .email(userRegisterRequest.getEmail())
                 .firstName(userRegisterRequest.getFirstName())
                 .lastName(userRegisterRequest.getLastName())

@@ -80,6 +80,8 @@ public class SurveyServiceImple implements SurveyValueService{
             surveyValueToUpdate.setTitle(surveyValue.getTitle());
             surveyValueToUpdate.setDescription(surveyValue.getDescription());
             surveyValueToUpdate.setStatus(surveyValue.getStatus());
+            System.out.println("color: "+surveyValue.getColorCode());
+            surveyValueToUpdate.setColorCode(surveyValue.getColorCode());
             surveyValueToUpdate.setUpdatedAt(LocalDateTime.now());
             surveyValueRepository.save(surveyValueToUpdate);
         }
