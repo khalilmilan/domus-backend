@@ -19,4 +19,9 @@ public interface MessageService {
      void updateMessage(Long id, Message message) throws MessageException;
      
      List<MessageDTO> getMessageByDiscussion(Long idDiscussion);
+     MessageDTO getLastMessageByDiscussion(Long idDiscussion);
+
+    Long getNumberMessageNotSeen(Long idDiscussion,Long idUSer);
+
+    void updateMessageNotSeen(Long idDiçscussion,Long idSender);
 }

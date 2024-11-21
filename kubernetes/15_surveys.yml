@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: surveys-deployment
+  labels:
+    app: surveys
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: surveys
+  template:
+    metadata:
+      labels:
+        app: surveys
+    spec:
+      containers:
+      - name: surveys
+        image: khalilmilan91/msurvey:s2
+        ports:
+        - containerPort: 9024
+        env:
+        - name: SPRING_APPLICATION_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: domus-configmap
+              key: SURVEYS_APPLICATION_NAME
+        - name: SPRING_CONFIG_IMPORT
+          valueFrom: 
+            configMapKeyRef:
+              name: domus-configmap
+              key: SPRING_CONFIG_IMPORT
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          valueFrom: 
+            configMapKeyRef:
+              name: domus-configmap
+              key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: surveys
+spec:
+  selector:
+    app: surveys
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9024
+      targetPort: 9024

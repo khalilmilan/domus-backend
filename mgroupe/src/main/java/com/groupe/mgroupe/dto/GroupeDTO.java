@@ -14,7 +14,6 @@ import java.util.List;
 public class GroupeDTO {
 
     private Long idGroupe;
-
     private String label;
     private Integer status;
     private Long idUser;

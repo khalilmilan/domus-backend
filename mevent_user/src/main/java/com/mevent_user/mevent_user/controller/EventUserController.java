@@ -22,9 +22,9 @@ import java.util.List;
 public class EventUserController {
 
     private EventUserService eventUserService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public ResponseEntity<EventUserDTO> saveEventUser(@RequestBody EventUserDTO eventUserDto){

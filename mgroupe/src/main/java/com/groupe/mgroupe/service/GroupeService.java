@@ -1,6 +1,7 @@
 package com.groupe.mgroupe.service;
 
 import com.groupe.mgroupe.dto.GroupeDTO;
+import com.groupe.mgroupe.dto.SimpleGroupeDTO;
 import com.groupe.mgroupe.exception.GroupeException;
 import com.groupe.mgroupe.model.Groupe;
 import org.w3c.dom.events.EventException;
@@ -24,6 +25,8 @@ public interface GroupeService {
     List<GroupeDTO> getGroupeByUser(Long idUser) ;
     List<GroupeDTO> getGroupeByMembre(Long idUser);
 
+    void leaveGroupe(Long idGroupe, Long idUser) throws GroupeException;
 
+    SimpleGroupeDTO getSimpleGroupe(Long idGroupe) throws GroupeException;
 
 }

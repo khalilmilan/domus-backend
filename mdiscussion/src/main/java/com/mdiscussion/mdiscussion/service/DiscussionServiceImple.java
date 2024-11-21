@@ -99,11 +99,33 @@ public class DiscussionServiceImple implements  DiscussionService{
         if (discussions.size() > 0) {
             for (Discussion discussion : discussions) {
                 DiscussionDTO dto = DiscussionMapper.mapToDiscussionDto(discussion);
+                SimpleUserDTO user1 = userFeignClient.getSimpleUser(dto.getIdUser1());
+                dto.setUser1(user1);
+                SimpleUserDTO user2 = userFeignClient.getSimpleUser(dto.getIdUser2());
+                dto.setUser2(user2);
+               // List<MessageDTO> messages = messageFeignClient.getAllMessageByDiscussion(dto.getIdDiscussion());
+               // dto.setMessages(messages);
+                MessageDTO lastMessage = messageFeignClient.getLastMessage(dto.getIdDiscussion());
+                dto.setLastMessage(lastMessage);
+                Long countMessageNotSeen = messageFeignClient.getCountMessageNotSeen(dto.getIdDiscussion(),idUser);
+                dto.setCountMessageNotSeen(countMessageNotSeen);
                 discussionsdto.add(dto);
             }
             return discussionsdto;
         }else {
             return new ArrayList<DiscussionDTO>();
         }
+    }
+
+    @Override
+    public List<SimpleUserDTO> findUsersWithoutDiscussionWith(Long currentUserId) {
+        List<Long> usersInDiscussion = discussionRepository.findUsersInDiscussionWith(currentUserId);
+        usersInDiscussion.add(currentUserId);
+        return userFeignClient.findByIdNotIn(usersInDiscussion);
+    }
+
+    @Override
+    public List<Long> findidUsersIndiscussion(Long idUser) {
+        return  discussionRepository.findUsersInDiscussionWith(idUser);
     }
 }

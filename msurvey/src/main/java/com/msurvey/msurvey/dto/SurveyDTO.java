@@ -25,7 +25,7 @@ public class SurveyDTO {
     private Long idUser;
     private SimpleUserDTO user;
     private Long idGroupe;
-    private GroupeDTO groupe;
+    private SimpleGroupeDTO groupe;
     private List<SurveyValueDTO> values;
     private List<VoteDTO> votes;
 }

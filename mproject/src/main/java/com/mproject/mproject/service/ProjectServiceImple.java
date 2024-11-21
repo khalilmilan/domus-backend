@@ -1,25 +1,21 @@
 package com.mproject.mproject.service;
 
-import com.mproject.mproject.client.UserServiceClient;
-import com.mproject.mproject.dto.ProjectDTO;
-import com.mproject.mproject.dto.ProjectUserDTO;
-import com.mproject.mproject.dto.SimpleUserDTO;
-import com.mproject.mproject.dto.TicketDTO;
+import com.mproject.mproject.client.*;
+import com.mproject.mproject.dto.*;
 import com.mproject.mproject.exception.ProjectException;
 import com.mproject.mproject.mapper.ProjectMapper;
 import com.mproject.mproject.model.Project;
 import com.mproject.mproject.repository.ProjectRepository;
-import com.mproject.mproject.client.ProjectUserFeignClient;
-import com.mproject.mproject.client.TicketFeignClient;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.events.EventException;
+
 
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +28,9 @@ public class ProjectServiceImple implements ProjectService{
     private UserServiceClient userFeignClient;
     private TicketFeignClient ticketFeignClient;
     private ProjectUserFeignClient projectUserFeignClient;
+
+    private NotificationFeignClient notificationFeignClient;
+    private UserDeviceFeignClient userDeviceFeignClient;
     @Override
     public ProjectDTO saveProject(ProjectDTO projectDto) {
         Project project = ProjectMapper.mapToProject(projectDto);
@@ -132,6 +131,19 @@ public class ProjectServiceImple implements ProjectService{
                     1
             );
             ProjectUserDTO dto = projectUserFeignClient.saveProjectUser(projectUserDto);
+            List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(idUser);
+            for (UserDeviceDTO device:devices){
+                NotificationDTO notification = new NotificationDTO();
+                notification.setTitle("📝 New Project Assigned");
+                notification.setDescription("You are added to new project "+projectWithId.get().getTitle());
+                notification.setType(7);
+                notification.setToken(device.getToken());
+                notification.setBadgeCount(1);
+                notification.setIdReciver(idUser);
+                notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                notification.setDate(new Date());
+                notificationFeignClient.saveNotification(notification);
+            }
         }
         else
         {
@@ -145,6 +157,19 @@ public class ProjectServiceImple implements ProjectService{
         if(projecttWithId.isPresent())
         {
             projectUserFeignClient.deleteByProjectAndUser(idProject,idUser);
+            List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(idUser);
+            for (UserDeviceDTO device:devices){
+                NotificationDTO notification = new NotificationDTO();
+                notification.setTitle("🚫 Excluded from Project");
+                notification.setDescription("You are excluded from project "+projecttWithId.get().getTitle());
+                notification.setType(7);
+                notification.setToken(device.getToken());
+                notification.setBadgeCount(1);
+                notification.setIdReciver(idUser);
+                notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                notification.setDate(new Date());
+                notificationFeignClient.saveNotification(notification);
+            }
         }
         else
         {

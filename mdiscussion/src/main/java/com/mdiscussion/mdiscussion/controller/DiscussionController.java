@@ -1,6 +1,7 @@
 package com.mdiscussion.mdiscussion.controller;
 
 import com.mdiscussion.mdiscussion.dto.DiscussionDTO;
+import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import com.mdiscussion.mdiscussion.exception.DiscussionException;
 import com.mdiscussion.mdiscussion.model.Discussion;
 import com.mdiscussion.mdiscussion.service.DiscussionService;
@@ -18,14 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 public class DiscussionController {
     private DiscussionService discussionService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
-    public ResponseEntity<DiscussionDTO> saveDiscussion(@RequestBody DiscussionDTO DiscussionDto){
-        DiscussionDTO savedDiscussion = discussionService.saveDiscussion(DiscussionDto);
-        return new ResponseEntity<>(savedDiscussion, HttpStatus.CREATED);
+    public DiscussionDTO saveDiscussion(@RequestBody DiscussionDTO DiscussionDto){
+        return discussionService.saveDiscussion(DiscussionDto);
     }
     @GetMapping("")
     public ResponseEntity<?> getAllDiscussion() {
@@ -73,5 +73,13 @@ public class DiscussionController {
     public ResponseEntity<List<DiscussionDTO>> getDiscussionByUser(@PathVariable("idUser") Long idUser) {
         List<DiscussionDTO> discussions = discussionService.getDiscussionByUser(idUser);
         return new ResponseEntity<>(discussions, discussions.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/possible_user/{idUser}")
+    public List<SimpleUserDTO> getPossibleUser(@PathVariable("idUser") Long idUser){
+        return discussionService.findUsersWithoutDiscussionWith(idUser);
+    }
+    @GetMapping("/users_in_discussion/{idUser}")
+    public List<Long> getUsersinDiscussion(@PathVariable("idUser") Long idUser){
+        return discussionService.findidUsersIndiscussion(idUser);
     }
 }

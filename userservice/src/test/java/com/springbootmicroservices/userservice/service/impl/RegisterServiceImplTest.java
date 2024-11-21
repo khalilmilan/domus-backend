@@ -59,7 +59,7 @@ class RegisterServiceImplTest extends AbstractBaseServiceTest {
         // Then
         User result = userRegisterService.registerUser(request);
 
-        assertEquals(expected.getId(), result.getId());
+        assertEquals(expected.getIdUser(), result.getIdUser());
         assertEquals(expected.getEmail(), result.getEmail());
         assertEquals(expected.getPhoneNumber(), result.getPhoneNumber());
         assertEquals(expected.getFirstName(), result.getFirstName());

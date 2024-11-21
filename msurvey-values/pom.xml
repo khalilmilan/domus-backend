@@ -12,6 +12,7 @@
 	<artifactId>msurvey-values</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>msurvey-value</name>
+	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -193,7 +194,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>khalilmilan91/${project.artifactId}:s13</image>
+						<image>khalilmilan91/${project.artifactId}:s2</image>
 					</to>
 				</configuration>
 			</plugin>

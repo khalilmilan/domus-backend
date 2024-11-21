@@ -1,8 +1,12 @@
 package com.mticket.mticket.service;
 
+import com.mticket.mticket.client.NotificationFeignClient;
+import com.mticket.mticket.client.UserDeviceFeignClient;
 import com.mticket.mticket.client.UserServiceClient;
+import com.mticket.mticket.dto.NotificationDTO;
 import com.mticket.mticket.dto.SimpleUserDTO;
 import com.mticket.mticket.dto.TicketDTO;
+import com.mticket.mticket.dto.UserDeviceDTO;
 import com.mticket.mticket.exception.TicketException;
 import com.mticket.mticket.mapper.TicketMapper;
 import com.mticket.mticket.model.Ticket;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +29,8 @@ public class TicketServiceImple implements TicketService{
     private static final Logger LOGGER = LoggerFactory.getLogger(TicketServiceImple.class);
     private UserServiceClient userFeignClient;
     private TicketRepository ticketRepository;
-    private ProjectFeignClient projectFeignClient;
+    private NotificationFeignClient notificationFeignClient;
+    private UserDeviceFeignClient userDeviceFeignClient;
     @Override
     public TicketDTO saveTicket(TicketDTO ticketDto) {
         Ticket ticket = TicketMapper.mapToTicket(ticketDto);
@@ -92,8 +98,61 @@ public class TicketServiceImple implements TicketService{
             Ticket ticketToUpdate=ticketWithId.get();
             ticketToUpdate.setTitle(ticket.getTitle());
             ticketToUpdate.setDescription(ticket.getDescription());
-            ticketToUpdate.setStatus(ticket.getStatus());
-            ticketToUpdate.setAffectedTo(ticket.getAffectedTo());
+            if(ticketToUpdate.getStatus()!=ticket.getStatus()) {
+                List<UserDeviceDTO> devicesOldUser = userDeviceFeignClient.getDevice(ticketToUpdate.getIdUser());
+                String ticketStatus="To do";
+                if (ticket.getStatus()==2){
+                    ticketStatus="In Progress";
+                } else if (ticket.getStatus()==3){
+                    ticketStatus="Finished";
+                }
+                for (UserDeviceDTO device:devicesOldUser){
+                    NotificationDTO notification = new NotificationDTO();
+                    notification.setTitle("📋 Ticket status update ");
+                    notification.setDescription("The status of the ticket "+ticketToUpdate.getTitle()+" has been updated to "+ticketStatus);
+                    notification.setType(10);
+                    notification.setToken(device.getToken());
+                    notification.setBadgeCount(1);
+                    notification.setIdReciver(ticketToUpdate.getIdUser());
+                    notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                    notification.setDate(new Date());
+                    notificationFeignClient.saveNotification(notification);
+                }
+                ticketToUpdate.setStatus(ticket.getStatus());
+            }
+            if(null!=ticket.getAffectedTo()
+                    && ticket.getAffectedTo()!=ticketToUpdate.getAffectedTo()){
+               if(null!=ticketToUpdate.getAffectedTo()){
+                   List<UserDeviceDTO> devicesOldUser = userDeviceFeignClient.getDevice(ticketToUpdate.getAffectedTo());
+                   for (UserDeviceDTO device:devicesOldUser){
+                       NotificationDTO notification = new NotificationDTO();
+                       notification.setTitle("🚫 Excluded from Ticket");
+                       notification.setDescription("you are no longer responsible for the ticket "+ticketToUpdate.getTitle());
+                       notification.setType(9);
+                       notification.setToken(device.getToken());
+                       notification.setBadgeCount(1);
+                       notification.setIdReciver(ticketToUpdate.getAffectedTo());
+                       notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                       notification.setDate(new Date());
+                       notificationFeignClient.saveNotification(notification);
+                   }
+               }
+                List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(ticket.getAffectedTo());
+                for (UserDeviceDTO device:devices){
+                    NotificationDTO notification = new NotificationDTO();
+                    notification.setTitle("📋 New Project Ticket Created");
+                    notification.setDescription("you have been assigned to the ticket "+ticketToUpdate.getTitle());
+                    notification.setType(9);
+                    notification.setToken(device.getToken());
+                    notification.setBadgeCount(1);
+                    notification.setIdReciver(ticket.getAffectedTo());
+                    notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                    notification.setDate(new Date());
+                    notificationFeignClient.saveNotification(notification);
+                }
+                ticketToUpdate.setAffectedTo(ticket.getAffectedTo());
+            }
+
             ticketRepository.save(ticketToUpdate);
         }
         else

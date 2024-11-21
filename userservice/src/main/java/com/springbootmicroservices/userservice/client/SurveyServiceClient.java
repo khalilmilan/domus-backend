@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface SurveyServiceClient {
     @GetMapping(value = "/count_survey_by_user/{idUser}",consumes = "application/json")
     int getSurveyCountByUser(@PathVariable("idUser") Long idUser);
+
+    @GetMapping(value = "/count_survey_by_participant/{idUser}",consumes = "application/json")
+    int getSurveyCountByParticipant(@PathVariable("idUser") Long idUser);
 }

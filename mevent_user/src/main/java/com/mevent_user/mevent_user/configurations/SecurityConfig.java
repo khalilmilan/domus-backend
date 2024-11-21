@@ -2,6 +2,7 @@ package com.mevent_user.mevent_user.configurations;
 
 import com.mevent_user.mevent_user.filter.CustomBearerTokenAuthenticationFilter;
 import com.mevent_user.mevent_user.security.CustomAuthenticationEntryPoint;
+import jakarta.ws.rs.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -68,6 +69,7 @@ public class SecurityConfig {
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
+                        .requestMatchers(HttpMethod.GET, "/event_user/health/readiness").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -20,9 +20,9 @@ public class CommentaireController {
 
 
     private CommentaireService commentaireService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public CommentaireDTO saveCommentaire(@RequestBody CommentaireDTO commentaireDto){

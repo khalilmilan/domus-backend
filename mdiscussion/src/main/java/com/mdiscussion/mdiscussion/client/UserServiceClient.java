@@ -5,10 +5,9 @@ import com.mdiscussion.mdiscussion.configurations.FeignClientConfig;
 import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Feign client interface named {@link UserServiceClient} for interacting with the User Service.
@@ -39,4 +38,7 @@ public interface UserServiceClient {
 
     @GetMapping(value = "/theni")
     void tests();
+
+    @PostMapping(value = "/get_discussion_simple_user",consumes = "application/json")
+    List<SimpleUserDTO> findByIdNotIn(@RequestBody List<Long> userIdsInDiscussion);
 }

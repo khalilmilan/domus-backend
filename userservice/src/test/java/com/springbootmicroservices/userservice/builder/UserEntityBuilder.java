@@ -14,7 +14,7 @@ public class UserEntityBuilder extends BaseBuilder<UserEntity> {
 
     public UserEntityBuilder withValidUserFields() {
         return this
-                .withId(UUID.randomUUID().toString())
+              //  .withId(UUID.randomUUID())
                 .withEmail("useradmin@example.com")
                 .withPassword("useradmin")
                 .withFirstName("John")
@@ -26,7 +26,7 @@ public class UserEntityBuilder extends BaseBuilder<UserEntity> {
 
     public UserEntityBuilder withValidAdminFields() {
         return this
-                .withId(UUID.randomUUID().toString())
+              //  .withId(UUID.randomUUID().toString())
                 .withEmail("user@example.com")
                 .withPassword("userpassword")
                 .withFirstName("John")
@@ -36,8 +36,8 @@ public class UserEntityBuilder extends BaseBuilder<UserEntity> {
                 .withUserStatus(UserStatus.ACTIVE);
     }
 
-    public UserEntityBuilder withId(String id) {
-        data.setId(id);
+    public UserEntityBuilder withId(Long id) {
+        data.setIdUser(id);
         return this;
     }
 

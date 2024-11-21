@@ -3,6 +3,7 @@ package com.mproject_user.mproject_user.configurations;
 
 import com.mproject_user.mproject_user.filter.CustomBearerTokenAuthenticationFilter;
 import com.mproject_user.mproject_user.security.CustomAuthenticationEntryPoint;
+import jakarta.ws.rs.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -69,6 +70,7 @@ public class SecurityConfig {
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
+                        .requestMatchers(HttpMethod.GET, "/project-user/health/readiness").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

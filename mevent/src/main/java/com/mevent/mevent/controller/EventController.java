@@ -1,6 +1,7 @@
 package com.mevent.mevent.controller;
 
 import com.mevent.mevent.dto.EventDTO;
+import com.mevent.mevent.dto.SimpleEventDTO;
 import com.mevent.mevent.exception.EventException;
 import com.mevent.mevent.model.Event;
 import com.mevent.mevent.service.EventService;
@@ -17,9 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 public class EventController {
     private EventService eventService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public ResponseEntity<EventDTO> saveEvent(@RequestBody EventDTO eventDto){
@@ -105,4 +106,14 @@ public class EventController {
     public List<EventDTO> getEventsByParticipant(@PathVariable("idUser") Long idUser){
         return eventService.getEventByParticipant(idUser);
     }
+    @GetMapping("/simple_event/{idEvent}")
+    public SimpleEventDTO getSimpleEvent(@PathVariable("idEvent") Long idEvent) throws EventException {
+        try {
+            return  eventService.getSimpleEvent(idEvent);
+        } catch (EventException e) {
+
+            return new SimpleEventDTO();
+        }
+    }
+
 }

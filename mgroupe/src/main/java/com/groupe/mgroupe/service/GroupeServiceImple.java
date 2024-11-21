@@ -1,10 +1,10 @@
 package com.groupe.mgroupe.service;
 
 import com.groupe.mgroupe.client.GroupeUserFeignClient;
+import com.groupe.mgroupe.client.NotificationFeignClient;
+import com.groupe.mgroupe.client.UserDeviceFeignClient;
 import com.groupe.mgroupe.client.UserServiceClient;
-import com.groupe.mgroupe.dto.GroupeDTO;
-import com.groupe.mgroupe.dto.GroupeUserDTO;
-import com.groupe.mgroupe.dto.SimpleUserDTO;
+import com.groupe.mgroupe.dto.*;
 import com.groupe.mgroupe.exception.GroupeException;
 import com.groupe.mgroupe.groupeMapper.GroupeMapper;
 import com.groupe.mgroupe.model.Groupe;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,9 @@ public class GroupeServiceImple implements GroupeService{
     private GroupeRepository groupeRepository;
     private UserServiceClient userFeignClient;
     private GroupeUserFeignClient groupeUserFeignClient;
+    private UserDeviceFeignClient userDeviceFeignClient;
 
+    private NotificationFeignClient notificationFeignClient;
     @Override
     public GroupeDTO saveGroupe(GroupeDTO groupeDto) {
         Groupe groupe = GroupeMapper.mapToGroupe(groupeDto);
@@ -96,12 +99,26 @@ public class GroupeServiceImple implements GroupeService{
         Optional<Groupe> groupeWithId = groupeRepository.findById(idGroupe);
         if(groupeWithId.isPresent())
         {
-            GroupeUserDTO eventUserDto = new GroupeUserDTO(
+            GroupeUserDTO groupeUserDto = new GroupeUserDTO(
                     idGroupe,
                     idUser,
                     1
             );
-             groupeUserFeignClient.saveGroupeUser(eventUserDto);
+            groupeUserFeignClient.saveGroupeUser(groupeUserDto);
+            List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(idUser);
+            for (UserDeviceDTO device:devices){
+                NotificationDTO notification = new NotificationDTO();
+                notification.setTitle("👥 New group");
+                notification.setDescription("You have been added to groupe "+groupeWithId.get().getLabel());
+                notification.setType(1);
+                notification.setToken(device.getToken());
+                notification.setBadgeCount(1);
+                notification.setIdReciver(idUser);
+                notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                notification.setDate(new Date());
+                notificationFeignClient.saveNotification(notification);
+            }
+
         }
         else
         {
@@ -111,11 +128,23 @@ public class GroupeServiceImple implements GroupeService{
 
     @Override
     public void removeMembre(Long idGroupe, Long idUser) throws GroupeException {
-
         Optional<Groupe> groupeWithId = groupeRepository.findById(idGroupe);
         if(groupeWithId.isPresent())
         {
             groupeUserFeignClient.deleteByGroupeAndUser(idGroupe,idUser);
+            List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(idUser);
+            for (UserDeviceDTO device:devices){
+                NotificationDTO notification = new NotificationDTO();
+                notification.setTitle("🚫 Excluded from Groupe");
+                notification.setDescription("You are excluded from groupe "+groupeWithId.get().getLabel());
+                notification.setToken(device.getToken());
+                notification.setType(2);
+                notification.setBadgeCount(1);
+                notification.setIdReciver(idUser);
+                notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                notification.setDate(new Date());
+                notificationFeignClient.saveNotification(notification);
+            }
         }
         else
         {
@@ -161,4 +190,46 @@ public class GroupeServiceImple implements GroupeService{
             return new ArrayList<GroupeDTO>();
         }
     }
+
+        @Override
+        public void leaveGroupe(Long idGroupe, Long idUser) throws GroupeException {
+            Optional<Groupe> groupeWithId = groupeRepository.findById(idGroupe);
+            if(groupeWithId.isPresent())
+            {
+                groupeUserFeignClient.deleteByGroupeAndUser(idGroupe,idUser);
+                SimpleUserDTO member = userFeignClient.getSimpleUser(idUser);
+                List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(groupeWithId.get().getIdUser());
+                for (UserDeviceDTO device:devices){
+                    NotificationDTO notification = new NotificationDTO();
+                    notification.setTitle("👤 Member Left the Group");
+                    notification.setDescription( member.getFirstName()+ " "+member.getLastName()+" left the group "+groupeWithId.get().getLabel());
+                    notification.setToken(device.getToken());
+                    notification.setDate(new Date());
+                    notification.setBadgeCount(1);
+                    notification.setType(3);
+                    notification.setIdReciver(groupeWithId.get().getIdUser());
+                    notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                    notificationFeignClient.saveNotification(notification);
+                }
+            }
+            else
+            {
+                throw new GroupeException(GroupeException.NotFoundException(idGroupe));
+            }
+        }
+
+    @Override
+    public SimpleGroupeDTO getSimpleGroupe(Long idGroupe) throws GroupeException {
+        Optional<Groupe> groupeOptional = groupeRepository.findById(idGroupe);
+        if (!groupeOptional.isPresent()) {
+            throw new GroupeException(GroupeException.NotFoundException(idGroupe));
+        }else {
+            SimpleGroupeDTO dto =GroupeMapper.mapToSimpleGroupeDto(groupeOptional.get());
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(dto.getIdUser());
+            dto.setUser(userDto);
+            return dto;
+        }
+    }
+
 }
+

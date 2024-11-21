@@ -1,6 +1,7 @@
 package com.mdiscussion.mdiscussion.mapper;
 
 import com.mdiscussion.mdiscussion.dto.DiscussionDTO;
+import com.mdiscussion.mdiscussion.dto.MessageDTO;
 import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import com.mdiscussion.mdiscussion.model.Discussion;
 
@@ -13,11 +14,14 @@ public class DiscussionMapper {
                 discussion.getIdDiscussion(),
                 discussion.getIdUser1(),
                 discussion.getIdUser2(),
+                discussion.getIdFireBase(),
                 discussion.getIdGroupe(),
                 discussion.getStatus(),
+                new MessageDTO(),
                 new SimpleUserDTO(),
                 new SimpleUserDTO(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                0L
         );
         return discussionDto;
     }
@@ -27,6 +31,7 @@ public class DiscussionMapper {
                 discussionDto.getIdDiscussion(),
                 discussionDto.getIdUser1(),
                 discussionDto.getIdUser2(),
+                discussionDto.getIdFireBase(),
                 discussionDto.getIdGroupe(),
                 discussionDto.getStatus()
         );

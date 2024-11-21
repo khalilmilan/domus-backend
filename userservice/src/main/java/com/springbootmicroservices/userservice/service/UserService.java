@@ -19,4 +19,5 @@ public interface UserService {
     User getUserByEmail(String email) ;
     List<SimpleUserDTO> getAllSimpleUser() ;
     UserDetailsDTO getUserDetails(Long idUser);
+    List<SimpleUserDTO> getUsersWithoutDiscussion(List<Long> userIdsInDiscussion);
 }

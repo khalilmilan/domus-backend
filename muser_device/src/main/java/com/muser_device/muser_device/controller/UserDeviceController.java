@@ -19,10 +19,9 @@ import java.util.List;
 public class UserDeviceController {
 
     private UserDeviceService userDeviceService;
-    @GetMapping(value = "/lowel")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @GetMapping(value = "/theni")
     @PreAuthorize("hasAnyAuthority('USER')")
@@ -30,12 +29,12 @@ public class UserDeviceController {
         return "hi user";
     }
     @PostMapping
-    public ResponseEntity<UserDeviceDTO> saveGroupe(@RequestBody UserDeviceDTO userDeviceDto){
+    public ResponseEntity<UserDeviceDTO> saveUserDevice(@RequestBody UserDeviceDTO userDeviceDto){
         UserDeviceDTO savedUserDevice = userDeviceService.saveUserDevice(userDeviceDto);
         return new ResponseEntity<>(savedUserDevice, HttpStatus.CREATED);
     }
     @GetMapping("")
-    public ResponseEntity<?> getAllGroupe() {
+    public ResponseEntity<?> getAllUserDevices() {
         List<UserDeviceDTO> usersDevice = userDeviceService.getALLUserDevice();
         return new ResponseEntity<>(usersDevice, usersDevice.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
@@ -75,5 +74,9 @@ public class UserDeviceController {
         catch (UserDeviceException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/get_device/{idUser}")
+    public List<UserDeviceDTO> getDevice(@PathVariable("idUser") Long idUser)  {
+            return userDeviceService.getUSerDeviceByIdUser(idUser);
     }
 }

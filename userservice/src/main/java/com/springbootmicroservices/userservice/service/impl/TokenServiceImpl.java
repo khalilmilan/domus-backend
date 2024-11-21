@@ -105,10 +105,11 @@ public class TokenServiceImpl implements TokenService {
 
         final Date accessTokenIssuedAt = new Date(currentTimeMillis);
 
-        final Date accessTokenExpiresAt = DateUtils.addMinutes(
+        final Date accessTokenExpiresAt = DateUtils.addDays(new Date(),tokenConfigurationParameter.getRefreshTokenExpireDay());
+             /*   addMinutes(
                 new Date(currentTimeMillis),
                 tokenConfigurationParameter.getAccessTokenExpireMinute()
-        );
+        );*/
 
         final String accessToken = Jwts.builder()
                 .header()

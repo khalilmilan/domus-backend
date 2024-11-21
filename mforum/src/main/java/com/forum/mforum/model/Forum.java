@@ -16,9 +16,7 @@ public class Forum extends BaseEntity{
     @Id
     @GeneratedValue
     private Long idForum;
-
     private String title;
-
     private String description;
     private Integer status;
     private Long idUser;

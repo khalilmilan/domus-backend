@@ -25,6 +25,4 @@ public interface GroupeUserService {
     List<SimpleUserDTO> getPossibleUser(Long idGroupe);
 
     List<Long> findGroupeByMembre(Long idUser);
-
-
 }

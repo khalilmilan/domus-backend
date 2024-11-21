@@ -1,0 +1,459 @@
+services:
+  configserver:
+    image: "khalilmilan91/configserver:s1"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  eurekaserver:
+    image: "khalilmilan91/eurekaserver:s2"
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+
+  users:
+    image: "khalilmilan91/muser:s3"
+    container_name: users-ms
+    ports:
+      - "9002:9002"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9002/user/lowel | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-user"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  groups:
+    image: "khalilmilan91/mgroupe:s2"
+    container_name: group-ms
+    ports:
+      - "9008:9008"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9008/groupe/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-groupe"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  group_user:
+    image: "khalilmilan91/mgroupe_user:s2"
+    container_name: group-user-ms
+    ports:
+      - "9020:9020"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9020/groupe_user/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-groupe-user"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+      
+  comment:
+    image: "khalilmilan91/comment:s2"
+    container_name: comment-ms
+    ports:
+      - "9006:9006"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9006/commentaire/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-commentaire"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+ 
+  discussion:
+    image: "khalilmilan91/mdiscussion:s2"
+    container_name: discussion-ms
+    ports:
+      - "9023:9023"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9023/discussion/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-discussion"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+      
+  event:
+    image: "khalilmilan91/mevent:s2"
+    container_name: event-ms
+    ports:
+      - "9001:9001"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9001/event/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-event"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+  event_user:
+    image: "khalilmilan91/mevent_user:s2"
+    container_name: event_user-ms
+    ports:
+      - "9003:9003"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9003/event_user/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-event-user"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config  
+      
+  forum:
+    image: "khalilmilan91/mforum:s2"
+    container_name: forum-ms
+    ports:
+      - "9005:9005"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9005/forum/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-forum"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+   
+  message:
+    image: "khalilmilan91/mmessage:s2"
+    container_name: message-ms
+    ports:
+      - "9009:9009"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9009/message/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-message"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+   
+  notification:
+    image: "khalilmilan91/mnotification:s2"
+    container_name: notification-ms
+    ports:
+      - "9007:9007"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9007/notification/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-notification"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+    
+  project:
+    image: "khalilmilan91/mproject:s2"
+    container_name: project-ms
+    ports:
+      - "9026:9026"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9026/project/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-project"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+   
+  project_user:
+    image: "khalilmilan91/mproject-user:s2"
+    container_name: project_user-ms
+    ports:
+      - "9038:9038"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9038/project-user/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-project-user"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+      
+  survey:
+    image: "khalilmilan91/msurvey:s2"
+    container_name: survey-ms
+    ports:
+      - "9024:9024"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9024/survey/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-survey"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+      
+  survey_value:
+    image: "khalilmilan91/msurvey-values:s2"
+    container_name: survey_value-ms
+    ports:
+      - "9025:9025"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9025/survey_value/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-survey-values"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+   
+  ticket:
+    image: "khalilmilan91/mticket:s2"
+    container_name: ticket-ms
+    ports:
+      - "9027:9027"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9027/ticket/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-ticket"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config   
+   
+  user_device:
+    image: "khalilmilan91/m_user_device:s2"
+    container_name: user_device-ms
+    ports:
+      - "9022:9022"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9022/user_device/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-user-device"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config 
+
+  vote:
+    image: "khalilmilan91/mvote:s2"
+    container_name: vote-ms
+    ports:
+      - "9011:9011"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9011/vote/health/readiness | grep hi || exit 1"
+      interval: 120s
+      timeout: 30s
+      retries: 10
+      start_period: 600s
+    environment:
+      SPRING_APPLICATION_NAME: "microservice-vote"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config   
+      
+  gatewayserver:
+    image: "khalilmilan91/gatewayserver:s1"
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    depends_on:
+      users:
+        condition: service_healthy
+      groups:
+        condition: service_healthy
+      group_user:
+        condition: service_healthy
+      comment:
+       condition: service_healthy
+      discussion:
+       condition: service_healthy
+      event_user:
+       condition: service_healthy 
+      event:
+       condition: service_healthy
+      forum:
+       condition: service_healthy
+      message:
+       condition: service_healthy
+      notification:
+       condition: service_healthy
+      project:
+       condition: service_healthy
+      project_user:
+       condition: service_healthy
+      survey:
+       condition: service_healthy
+      survey_value:
+       condition: service_healthy
+      ticket:
+       condition: service_healthy
+      user_device:
+       condition: service_healthy
+      vote:
+       condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+
+networks:
+  khalilmilan91:
+    driver: "bridge"

@@ -2,6 +2,7 @@ package com.msurvey_values.msurvey_values.configurations;
 
 import com.msurvey_values.msurvey_values.filter.CustomBearerTokenAuthenticationFilter;
 import com.msurvey_values.msurvey_values.security.CustomAuthenticationEntryPoint;
+import jakarta.ws.rs.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -68,6 +69,7 @@ public class SecurityConfig {
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
+                        .requestMatchers(HttpMethod.GET, "/survey_value/health/readiness").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

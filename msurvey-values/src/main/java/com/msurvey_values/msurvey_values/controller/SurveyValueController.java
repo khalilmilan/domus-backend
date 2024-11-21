@@ -19,9 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SurveyValueController {
     private SurveyValueService surveyValueService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public SurveyValueDTO saveSurveyValue(@RequestBody SurveyValueDTO surveyValueDTO){

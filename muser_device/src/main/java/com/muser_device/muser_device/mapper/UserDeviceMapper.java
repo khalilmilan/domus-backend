@@ -15,7 +15,8 @@ public class UserDeviceMapper {
                 userDevice.getVersion(),
                 userDevice.getUid(),
                 userDevice.getToken(),
-                userDevice.getStatus()
+                userDevice.getStatus(),
+                userDevice.getLastActive()
         );
         return userDeviceDto;
     }
@@ -28,7 +29,8 @@ public class UserDeviceMapper {
                 deviceDto.getVersion(),
                 deviceDto.getUid(),
                 deviceDto.getToken(),
-                deviceDto.getStatus()
+                deviceDto.getStatus(),
+                deviceDto.getLastActive()
         );
         return userDevice;
     }

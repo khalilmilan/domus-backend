@@ -19,9 +19,9 @@ public class MessageController {
 
 
     private MessageService messageService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping("")
     public MessageDTO saveMessage(@RequestBody MessageDTO messageDto){
@@ -47,7 +47,6 @@ public class MessageController {
     public void deleteById(@PathVariable("idMessage") Long idMessage) throws MessageException{
         try{
             messageService.deleteMessage(idMessage);
-
         }
         catch (MessageException e)
         {
@@ -60,14 +59,11 @@ public class MessageController {
     {
         try {
             messageService.updateMessage(idMessage,message);
-
         }
         catch(ConstraintViolationException e)
         {
-
         }
         catch (MessageException e) {
-
         }
     }
 
@@ -76,4 +72,20 @@ public class MessageController {
         List<MessageDTO> messages = messageService.getMessageByDiscussion(idDiscussion);
         return messages;
     }
+    @GetMapping("/last_message/{idDiscussion}")
+    public MessageDTO getLastMessage(@PathVariable("idDiscussion") Long idDiscussion) {
+        MessageDTO message = messageService.getLastMessageByDiscussion(idDiscussion);
+        return message;
+    }
+
+    @GetMapping("/count_message_not_seen/{idDiscussion}/{idUser}")
+    public Long getCountMessageNotSeen(@PathVariable("idDiscussion") Long idDiscussion,@PathVariable("idUser") Long idUser) {
+        return messageService.getNumberMessageNotSeen(idDiscussion,idUser);
+    }
+
+    @PutMapping("/update_message_status/{idDiscussion}/{idSender}")
+    public void updateMessagesStatus(@PathVariable("idDiscussion") Long idDiscussion,@PathVariable("idSender") Long idSender){
+        messageService.updateMessageNotSeen(idDiscussion,idSender);
+    }
+
 }

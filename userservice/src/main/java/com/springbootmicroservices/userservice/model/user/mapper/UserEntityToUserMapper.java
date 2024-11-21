@@ -21,8 +21,8 @@ public interface UserEntityToUserMapper extends BaseMapper<UserEntity, User> {
      * @param source the user entity to be mapped
      * @return a {@link User} with mapped values
      */
-    @Override
-    User map(UserEntity source);
+   // @Override
+   // User map(UserEntity source);
 
     /**
      * Initializes the {@link UserEntityToUserMapper} mapper.

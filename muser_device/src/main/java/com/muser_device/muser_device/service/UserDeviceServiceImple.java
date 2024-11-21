@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +22,22 @@ public class UserDeviceServiceImple implements UserDeviceService{
     private UserDeviceRepository userDeviceRepository;
     @Override
     public UserDeviceDTO saveUserDevice(UserDeviceDTO userDeviceDto) {
-        UserDevice userDevice = UserDeviceMapper.mapToUserDevice(userDeviceDto);
-        UserDevice savedUserDevice = userDeviceRepository.save(userDevice);
-        UserDeviceDTO savedUserDeviceDto = UserDeviceMapper.mapToUserDeviceDTO(savedUserDevice);
-        return savedUserDeviceDto;
+        UserDevice device =  userDeviceRepository.findUserDeviceByIdUserAndUid(userDeviceDto.getIdUser(),userDeviceDto.getUid());
+        if(device ==null){
+            UserDevice userDevice = UserDeviceMapper.mapToUserDevice(userDeviceDto);
+            userDevice.setLastActive(LocalDateTime.now());
+            UserDevice savedUserDevice = userDeviceRepository.save(userDevice);
+            UserDeviceDTO savedUserDeviceDto = UserDeviceMapper.mapToUserDeviceDTO(savedUserDevice);
+            return savedUserDeviceDto;
+        }else{
+            device.setToken(userDeviceDto.getToken());
+            device.setVersion(userDeviceDto.getVersion());
+            device.setLastActive(LocalDateTime.now());
+            UserDevice updatredDevice = userDeviceRepository.save(device);
+            UserDeviceDTO savedUserDeviceDto = UserDeviceMapper.mapToUserDeviceDTO(updatredDevice);
+            return savedUserDeviceDto;
+        }
+
     }
 
     @Override
@@ -81,5 +94,16 @@ public class UserDeviceServiceImple implements UserDeviceService{
         {
             throw new UserDeviceException(UserDeviceException.NotFoundException(idUserDevice));
         }
+    }
+
+    @Override
+    public List<UserDeviceDTO> getUSerDeviceByIdUser(Long idUser) {
+        List<UserDevice> userDevices = userDeviceRepository.findUserDevicesByIdUser(idUser);
+        List<UserDeviceDTO> dto = new ArrayList<>();
+        for(UserDevice userDevice:userDevices){
+           UserDeviceDTO userDeviceDTO = UserDeviceMapper.mapToUserDeviceDTO(userDevice);
+            dto.add(userDeviceDTO);
+        }
+        return dto;
     }
 }

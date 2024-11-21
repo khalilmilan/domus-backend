@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SurveyRepository extends JpaRepository<Survey,Long> {
     List<Survey> findSurveyByIdUser(Long idUser);
+    List<Survey> findSurveyByIdGroupeIn(List <Long> idGroupe);//findByIdGroupeIn(List<Long> didgroupe);
 }

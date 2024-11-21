@@ -1,5 +1,6 @@
 package com.msurvey.msurvey.service;
 
+import com.msurvey.msurvey.dto.SimpleSurveyDTO;
 import com.msurvey.msurvey.dto.SurveyDTO;
 import com.msurvey.msurvey.exception.SurveyException;
 import com.msurvey.msurvey.model.Survey;
@@ -18,5 +19,8 @@ public interface SurveyService {
     int getCountSurveyByUser(Long idUser);
     List<SurveyDTO> getALLSurveyByParticipant(Long idUser);
 
+    SimpleSurveyDTO getSimpleSurvey(Long idSurvey) throws SurveyException;
+
+    int getCountSurveyByParticipant(Long idUser);
 
 }

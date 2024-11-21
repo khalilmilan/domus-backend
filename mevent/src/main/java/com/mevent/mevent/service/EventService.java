@@ -1,6 +1,7 @@
 package com.mevent.mevent.service;
 
 import com.mevent.mevent.dto.EventDTO;
+import com.mevent.mevent.dto.SimpleEventDTO;
 import com.mevent.mevent.exception.EventException;
 import com.mevent.mevent.model.Event;
 
@@ -18,4 +19,6 @@ public interface EventService {
     int getCountEventByUser(Long idUser);
 
     List<EventDTO> getEventByParticipant(Long idUser);
+
+    SimpleEventDTO getSimpleEvent(Long idEvent) throws EventException;
 }

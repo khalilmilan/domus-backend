@@ -19,9 +19,9 @@ import java.util.List;
 public class GroupeUserController {
 
     private GroupeUserService groupeUserService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public GroupeUserDTO saveGroupeUser(@RequestBody GroupeUserDTO groupeUserDto){

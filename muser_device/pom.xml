@@ -9,7 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mgroupe</groupId>
-	<artifactId>mgroupe</artifactId>
+	<artifactId>m_user_device</artifactId>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mgroupe</name>
 	<description>Demo project for Spring Boot</description>
@@ -194,7 +195,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>khalilmilan91/${project.artifactId}:s13</image>
+						<image>khalilmilan91/${project.artifactId}:s2</image>
 					</to>
 				</configuration>
 			</plugin>

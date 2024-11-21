@@ -34,12 +34,12 @@ class LogoutServiceImplTest extends AbstractBaseServiceTest {
         UserEntity mockUserEntity = new UserEntityBuilder().withValidUserFields().build();
 
         Claims mockAccessTokenClaims = TokenBuilder.getValidClaims(
-                mockUserEntity.getId(),
+                mockUserEntity.getIdUser().toString(),
                 mockUserEntity.getFirstName()
         );
 
         Claims mockRefreshTokenClaims = TokenBuilder.getValidClaims(
-                mockUserEntity.getId(),
+                mockUserEntity.getIdUser().toString(),
                 mockUserEntity.getFirstName()
         );
 

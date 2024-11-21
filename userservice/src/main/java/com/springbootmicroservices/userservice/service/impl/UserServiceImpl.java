@@ -1,14 +1,13 @@
 package com.springbootmicroservices.userservice.service.impl;
 
-import com.springbootmicroservices.userservice.client.EventServiceClient;
-import com.springbootmicroservices.userservice.client.ProjectServiceClient;
-import com.springbootmicroservices.userservice.client.SurveyServiceClient;
+import com.springbootmicroservices.userservice.client.*;
 import com.springbootmicroservices.userservice.exception.UserNotFoundException;
 import com.springbootmicroservices.userservice.model.SimpleUserDTO;
 import com.springbootmicroservices.userservice.model.UserDTO;
 import com.springbootmicroservices.userservice.model.UserDetailsDTO;
 import com.springbootmicroservices.userservice.model.user.User;
 import com.springbootmicroservices.userservice.model.user.entity.UserEntity;
+import com.springbootmicroservices.userservice.model.user.enums.UserType;
 import com.springbootmicroservices.userservice.model.user.mapper.UserEntityToUserMapper;
 import com.springbootmicroservices.userservice.model.user.mapper.UserMapper;
 import com.springbootmicroservices.userservice.repository.UserRepository;
@@ -27,6 +26,9 @@ public class UserServiceImpl implements UserService {
     private SurveyServiceClient surveyServiceClient;
     private ProjectServiceClient projectServiceClient;
     private EventServiceClient eventServiceClient;
+    private ProjectUserFeignClient projectUserFeignClient;
+
+    private EventUserFeignClient eventUserFeignClient;
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
         return null;
@@ -95,13 +97,37 @@ public class UserServiceImpl implements UserService {
         }else {
             UserDetailsDTO userDetails = new UserDetailsDTO();
             userDetails.setUser(userEntityToUserMapper.map(userOptional.get()));
-            int countSurvey = surveyServiceClient.getSurveyCountByUser(idUser);
-            userDetails.setCountSurvey(countSurvey);
-            int countProject = projectServiceClient.getProjectCountByUser(idUser);
-            userDetails.setCountProject(countProject);
-            int countEvent = eventServiceClient.count_event_by_user(idUser);
-            userDetails.setCountEvent(countEvent);
+            if(userDetails.getUser().getUserType().equals(UserType.ADMIN)){
+                int countSurvey = surveyServiceClient.getSurveyCountByUser(idUser);
+                userDetails.setCountSurvey(countSurvey);
+                int countProject = projectServiceClient.getProjectCountByUser(idUser);
+                userDetails.setCountProject(countProject);
+                int countEvent = eventServiceClient.count_event_by_user(idUser);
+                userDetails.setCountEvent(countEvent);
+            }else{
+                List<Long> idsProject = projectUserFeignClient.getIdsProjectByParticipant(idUser);
+                userDetails.setCountProject(idsProject.size());
+                List<Long> idsEvent = eventUserFeignClient.getIdsProjectByParticipant(idUser);
+                userDetails.setCountEvent(idsEvent.size());
+                int countSurveys = surveyServiceClient.getSurveyCountByParticipant(idUser);
+                userDetails.setCountSurvey(countSurveys);
+            }
+
             return userDetails;
+        }
+    }
+
+    @Override
+    public List<SimpleUserDTO> getUsersWithoutDiscussion(List<Long> userIdsInDiscussion) {
+        List<UserEntity> users = userRepository.findByIdUserNotIn(userIdsInDiscussion);
+        List<SimpleUserDTO> simpleUsers = new ArrayList<SimpleUserDTO>();
+        if (users.size()> 0) {
+            for(UserEntity user:users){
+                simpleUsers.add(UserMapper.mapToSimpleDTO(user));
+            }
+            return simpleUsers;
+        }else {
+            return new ArrayList<>();
         }
     }
 

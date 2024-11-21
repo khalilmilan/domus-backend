@@ -17,4 +17,8 @@ public interface UserDeviceService {
 
     UserDeviceDTO getUserDevice(Long idUserDevice) throws UserDeviceException;
 
-    public void updateUserDevice(Long idUserDevice, UserDevice userDevice) throws UserDeviceException;}
+     void updateUserDevice(Long idUserDevice, UserDevice userDevice) throws UserDeviceException;
+
+    List<UserDeviceDTO> getUSerDeviceByIdUser(Long idUser);
+}
+

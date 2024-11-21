@@ -3,6 +3,7 @@ package com.springbootmicroservices.userservice.repository;
 import com.springbootmicroservices.userservice.model.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,5 +27,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * @return an {@link Optional} containing the {@link UserEntity} if found, or {@link Optional#empty()} if not.
      */
     Optional<UserEntity> findUserEntityByEmail(final String email);
-
+    List<UserEntity> findByIdUserNotIn(List<Long> userIds);
 }

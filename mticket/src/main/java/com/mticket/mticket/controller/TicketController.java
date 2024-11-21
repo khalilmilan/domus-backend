@@ -19,9 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketController {
     private TicketService ticketService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public TicketDTO saveTicket(@RequestBody TicketDTO ticketDto){

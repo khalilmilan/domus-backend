@@ -21,9 +21,9 @@ import java.util.List;
 public class ForumController {
 
     private ForumService forumService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public ResponseEntity<ForumDTO> saveForum(@RequestBody ForumDTO forumDto){

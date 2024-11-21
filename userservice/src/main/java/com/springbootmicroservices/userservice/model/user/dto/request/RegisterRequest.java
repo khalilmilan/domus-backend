@@ -20,7 +20,7 @@ import java.util.Date;
 public class RegisterRequest {
 
     @Email(message = "Please enter valid e-mail address")
-    @Size(min = 7, message = "Minimum e-mail length is 7 characters.")
+    //@Size(min = 7, message = "Minimum e-mail length is 7 characters.")
     private String email;
 
     @Size(min = 8)
@@ -33,7 +33,7 @@ public class RegisterRequest {
     private String lastName;
 
     @NotBlank(message = "Phone number can't be blank.")
-    @Size(min = 11, max = 20)
+    @Size(min = 8, max = 8)
     private String phoneNumber;
 
     @NotBlank(message = "Role can't be blank.")

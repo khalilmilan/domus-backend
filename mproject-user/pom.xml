@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>com.mproject-user</groupId>
 	<artifactId>mproject-user</artifactId>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>project-user</name>
 	<description>Demo project-user for Spring Boot</description>
@@ -193,7 +194,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>khalilmilan91/${project.artifactId}:s13</image>
+						<image>khalilmilan91/${project.artifactId}:s2</image>
 					</to>
 				</configuration>
 			</plugin>

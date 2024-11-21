@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentaireDTO {
-
     private Long idCommentaire;
     private String content;
     private Date date;

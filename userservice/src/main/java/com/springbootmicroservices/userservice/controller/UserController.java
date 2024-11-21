@@ -1,8 +1,8 @@
 package com.springbootmicroservices.userservice.controller;
 
+import com.springbootmicroservices.userservice.client.ProjectUserFeignClient;
 import com.springbootmicroservices.userservice.exception.UserNotFoundException;
 import com.springbootmicroservices.userservice.model.SimpleUserDTO;
-import com.springbootmicroservices.userservice.model.UserDTO;
 import com.springbootmicroservices.userservice.model.UserDetailsDTO;
 import com.springbootmicroservices.userservice.model.common.dto.response.CustomResponse;
 import com.springbootmicroservices.userservice.model.user.Token;
@@ -188,6 +188,16 @@ public class UserController {
         } catch (UserNotFoundException e) {
             //  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND).body(new UserDTO());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UserDetailsDTO());
+        }
+    }
+
+    @PostMapping("/get_discussion_simple_user")
+    public List<SimpleUserDTO> findByIdNotIn(@RequestBody List<Long> userIdsInDiscussion) throws UserNotFoundException {
+        try {
+            return userService.getUsersWithoutDiscussion(userIdsInDiscussion);
+        } catch (UserNotFoundException e) {
+            //  return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND).body(new UserDTO());
+            return new ArrayList<>();
         }
     }
 

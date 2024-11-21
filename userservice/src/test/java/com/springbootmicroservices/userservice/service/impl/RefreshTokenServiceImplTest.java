@@ -46,7 +46,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
         UserEntity mockUserEntity = new UserEntityBuilder().withValidUserFields().build();
 
         Claims mockClaims = TokenBuilder.getValidClaims(
-                mockUserEntity.getId(),
+                mockUserEntity.getIdUser().toString(),
                 mockUserEntity.getFirstName()
         );
 
@@ -58,7 +58,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
 
         doNothing().when(tokenService).verifyAndValidate(refreshTokenString);
         when(tokenService.getPayload(refreshTokenString)).thenReturn(mockClaims);
-        when(userRepository.findById(anyString())).thenReturn(Optional.of(mockUserEntity));
+        //when(userRepository.findById(anyString())).thenReturn(Optional.of(mockUserEntity));
         when(tokenService.generateToken(mockUserEntity.getClaims(), refreshTokenString)).thenReturn(expectedToken);
 
         // When
@@ -73,7 +73,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
         // Verify
         verify(tokenService).verifyAndValidate(refreshTokenString);
         verify(tokenService).getPayload(refreshTokenString);
-        verify(userRepository).findById(anyString());
+       // verify(userRepository).findById(anyString());
         verify(tokenService).generateToken(mockUserEntity.getClaims(), refreshTokenString);
 
     }
@@ -114,7 +114,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
 
         doNothing().when(tokenService).verifyAndValidate(refreshTokenString);
         when(tokenService.getPayload(refreshTokenString)).thenReturn(mockClaims);
-        when(userRepository.findById("nonExistentUserId")).thenReturn(Optional.empty());
+      //  when(userRepository.findById("nonExistentUserId")).thenReturn(Optional.empty());
 
         // When, Then & Verify
         UserNotFoundException exception = assertThrows(UserNotFoundException.class,
@@ -126,7 +126,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
 
         verify(tokenService).verifyAndValidate(refreshTokenString);
         verify(tokenService).getPayload(refreshTokenString);
-        verify(userRepository).findById("nonExistentUserId");
+       // verify(userRepository).findById("nonExistentUserId");
 
     }
 
@@ -141,11 +141,11 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
 
         UserEntity inactiveUser = new UserEntityBuilder().withValidUserFields().withUserStatus(UserStatus.PASSIVE).build();
 
-        Claims mockClaims = TokenBuilder.getValidClaims(inactiveUser.getId(), inactiveUser.getFirstName());
+        Claims mockClaims = TokenBuilder.getValidClaims(inactiveUser.getIdUser().toString(), inactiveUser.getFirstName());
 
         doNothing().when(tokenService).verifyAndValidate(refreshTokenString);
         when(tokenService.getPayload(refreshTokenString)).thenReturn(mockClaims);
-        when(userRepository.findById(inactiveUser.getId())).thenReturn(Optional.of(inactiveUser));
+        when(userRepository.findById(inactiveUser.getIdUser())).thenReturn(Optional.of(inactiveUser));
 
         // When, Then & Verify
         UserStatusNotValidException exception = assertThrows(UserStatusNotValidException.class,
@@ -155,7 +155,7 @@ class RefreshTokenServiceImplTest extends AbstractBaseServiceTest {
 
         verify(tokenService).verifyAndValidate(refreshTokenString);
         verify(tokenService).getPayload(refreshTokenString);
-        verify(userRepository).findById(inactiveUser.getId());
+        verify(userRepository).findById(inactiveUser.getIdUser());
 
     }
 

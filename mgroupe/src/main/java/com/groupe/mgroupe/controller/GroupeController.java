@@ -1,6 +1,7 @@
 package com.groupe.mgroupe.controller;
 
 import com.groupe.mgroupe.dto.GroupeDTO;
+import com.groupe.mgroupe.dto.SimpleGroupeDTO;
 import com.groupe.mgroupe.exception.GroupeException;
 import com.groupe.mgroupe.model.Groupe;
 import com.groupe.mgroupe.service.GroupeService;
@@ -20,9 +21,9 @@ import java.util.List;
 public class GroupeController {
 
     private GroupeService groupeService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public ResponseEntity<GroupeDTO> saveGroupe(@RequestBody GroupeDTO groupeDto){
@@ -104,5 +105,24 @@ public class GroupeController {
     public ResponseEntity<?> getGroupeByMembre(@PathVariable("idUser") Long idUser) {
         List<GroupeDTO> groupes = groupeService.getGroupeByMembre(idUser);
         return new ResponseEntity<>(groupes, groupes.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+    @DeleteMapping("/leave_groupe/{idGroupe}/{idUser}")
+    public ResponseEntity<?> leaveGroupe(@PathVariable("idGroupe") Long idGroupe,@PathVariable("idUser") Long idUser) throws GroupeException{
+        try{
+            groupeService.leaveGroupe(idGroupe,idUser);
+            return new ResponseEntity<>("Successfully deleted membre with id "+idUser+"from groupe :"+idGroupe, HttpStatus.OK);
+        }
+        catch (GroupeException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/simple_groupe/{idGroupe}")
+    public SimpleGroupeDTO getSimpleGroupe(@PathVariable("idGroupe") Long idGroupe) throws GroupeException {
+        try {
+            return groupeService.getSimpleGroupe(idGroupe);
+        } catch (GroupeException e) {
+            return new SimpleGroupeDTO();
+        }
     }
 }

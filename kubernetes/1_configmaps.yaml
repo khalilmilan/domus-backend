@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: domus-configmap
+data:
+  SPRING_PROFILES_ACTIVE: prod
+  SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eurekaserver:8070/eureka/"
+  CONFIGSERVER_APPLICATION_NAME: configserver
+  EUREKA_APPLICATION_NAME: eurekaserver
+  USERS_APPLICATION_NAME: microservice-user
+  GROUPS_APPLICATION_NAME: microservice-groupe
+  GROUPS_USER_APPLICATION_NAME: microservice-groupe-user
+  COMMENTS_APPLICATION_NAME: microservice-commentaire
+  DISCUSSIONS_APPLICATION_NAME: microservice-discussion
+  EVENTS_APPLICATION_NAME: microservice-event
+  EVENTS_USER_APPLICATION_NAME: microservice-event-user
+  FORUM_APPLICATION_NAME: microservice-forum
+  MESSAGES_APPLICATION_NAME: microservice-message
+  NOTIFICATIONS_APPLICATION_NAME: microservice-notification
+  PROJECTS_APPLICATION_NAME: microservice-project
+  PROJECTS_USER_APPLICATION_NAME: microservice-project-user
+  SURVEYS_APPLICATION_NAME: microservice-survey
+  TICKETS_APPLICATION_NAME: microservice-ticket
+  SURVEYS_VALUES_APPLICATION_NAME: microservice-survey-values
+  USERS_DEVICE_APPLICATION_NAME: microservice-user-device
+  VOTES_APPLICATION_NAME: microservice-vote
+  
+  GATEWAY_APPLICATION_NAME: gatewayserver
+  

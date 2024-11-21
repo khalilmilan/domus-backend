@@ -17,6 +17,7 @@ public class Discussion extends BaseEntity{
     private Long idDiscussion;
     private Long idUser1;
     private Long idUser2;
+    private String idFireBase;
     private Long idGroupe;
     private Integer status;
 

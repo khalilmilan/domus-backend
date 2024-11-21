@@ -1,10 +1,11 @@
 package com.mevent_user.mevent_user.service;
 
+import com.mevent_user.mevent_user.client.EventFeignClient;
+import com.mevent_user.mevent_user.client.NotificationFeignClient;
+import com.mevent_user.mevent_user.client.UserDeviceFeignClient;
 import com.mevent_user.mevent_user.client.UserServiceClient;
-import com.mevent_user.mevent_user.dto.EventUserDTO;
-import com.mevent_user.mevent_user.dto.SimpleUserDTO;
+import com.mevent_user.mevent_user.dto.*;
 
-import com.mevent_user.mevent_user.dto.SimpleUserDetailsDTO;
 import com.mevent_user.mevent_user.exception.EventUserException;
 import com.mevent_user.mevent_user.mapper.EventUserMapper;
 import com.mevent_user.mevent_user.model.EventUser;
@@ -13,10 +14,10 @@ import com.mevent_user.mevent_user.repository.EventUserRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +29,9 @@ public class EventUserImple implements EventUserService{
     private static final Logger LOGGER = LoggerFactory.getLogger(EventUserImple.class);
     private UserServiceClient userFeignClient;
     private EventUserRepository eventUserRepository;
+    private NotificationFeignClient notificationFeignClient;
+    private UserDeviceFeignClient userDeviceFeignClient;
+    private EventFeignClient eventFeignClient;
     @Override
     public EventUserDTO saveEvent(EventUserDTO eventUserDTO) {
         EventUser eventUser = EventUserMapper.mapToEventUser(eventUserDTO);
@@ -68,7 +72,7 @@ public class EventUserImple implements EventUserService{
             throw new EventUserException(EventUserException.NotFoundException(idEventUser));
         }else {
             EventUserDTO dto =EventUserMapper.mapToEventUserDto(eventUserOptional.get());
-            //  List<EventDTO> ambulances = apiClient.getAmbulances(dto.getId());
+            //  List<SimpleEventDTO> ambulances = apiClient.getAmbulances(dto.getId());
             // dto.setAmbulances(ambulances);
             return dto;
         }
@@ -151,6 +155,27 @@ public class EventUserImple implements EventUserService{
             EventUser eventUser = eventUserOptional.get();
             eventUser.setStatus(newAnswer);
             eventUserRepository.save(eventUser);
+            SimpleUserDTO userDto = userFeignClient.getSimpleUser(idUser);
+            SimpleEventDTO event = eventFeignClient.getSimpleEvent(idEvent);
+            List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(event.getIdUser());
+            String answer = "NO";
+            if(newAnswer==2){
+                answer ="maybe";
+            } else if (newAnswer==3) {
+                answer ="participate";
+            }
+            for (UserDeviceDTO device:devices){
+                NotificationDTO notification = new NotificationDTO();
+                notification.setTitle("📅 Answer for Event");
+                notification.setDescription(userDto.getFirstName() +" "+userDto.getLastName()+ " responded to your invitation : "+answer);
+                notification.setType(6);
+                notification.setToken(device.getToken());
+                notification.setBadgeCount(1);
+                notification.setDate(new Date());
+                notification.setIdReciver(event.getIdUser());
+                notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+                notificationFeignClient.saveNotification(notification);
+            }
         }
     }
 }

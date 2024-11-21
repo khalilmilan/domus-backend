@@ -1,6 +1,7 @@
 package com.mdiscussion.mdiscussion.service;
 
 import com.mdiscussion.mdiscussion.dto.DiscussionDTO;
+import com.mdiscussion.mdiscussion.dto.SimpleUserDTO;
 import com.mdiscussion.mdiscussion.exception.DiscussionException;
 import com.mdiscussion.mdiscussion.model.Discussion;
 
@@ -19,4 +20,8 @@ public interface DiscussionService {
     void updateDiscussion(Long idDiscussion, Discussion discussion) throws DiscussionException;
 
     List<DiscussionDTO> getDiscussionByUser(Long idUser1);
+    List<SimpleUserDTO> findUsersWithoutDiscussionWith(Long currentUserId);
+
+    List <Long> findidUsersIndiscussion(Long idUser);
+
 }

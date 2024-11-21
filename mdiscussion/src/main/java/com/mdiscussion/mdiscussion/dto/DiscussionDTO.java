@@ -15,10 +15,14 @@ public class DiscussionDTO {
     private Long idDiscussion;
     private Long idUser1;
     private Long idUser2;
+    private String idFireBase;
     private Long idGroupe;
     private Integer status;
+    private MessageDTO lastMessage;
     private SimpleUserDTO user1;
     private SimpleUserDTO user2;
     private List<MessageDTO> messages;
+
+    private Long countMessageNotSeen;
 
 }

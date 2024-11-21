@@ -25,4 +25,5 @@ public interface ProjectUserService {
     List<SimpleUserDTO> getPossibleUser(Long idProject);
 
     List<Long> getProjectByParticipant(Long idUser);
+
 }

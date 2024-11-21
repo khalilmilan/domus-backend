@@ -1,5 +1,6 @@
 package com.msurvey.msurvey.controller;
 
+import com.msurvey.msurvey.dto.SimpleSurveyDTO;
 import com.msurvey.msurvey.dto.SurveyDTO;
 import com.msurvey.msurvey.exception.SurveyException;
 import com.msurvey.msurvey.model.Survey;
@@ -18,9 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SurveyController {
     private SurveyService surveyService;
-    @GetMapping(value = "/lowel")
-    public String test(){
-        return "hi";
+    @GetMapping(value = "/health/readiness")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("hi");
     }
     @PostMapping
     public ResponseEntity<SurveyDTO> saveSurvey(@RequestBody SurveyDTO surveyDTO){
@@ -81,6 +82,16 @@ public class SurveyController {
     @GetMapping("/by_participant/{idUser}")
     public List<SurveyDTO> getALLSurveyByParticipant(@PathVariable("idUser") Long idUser){
         return surveyService.getALLSurveyByParticipant(idUser);
+    }
+
+    @GetMapping("/simple_survey/{idSurvey}")
+    public SimpleSurveyDTO getSimpleSurvey(@PathVariable("idSurvey") Long idSurvey) throws SurveyException {
+        return surveyService.getSimpleSurvey(idSurvey);
+    }
+
+    @GetMapping("/count_survey_by_participant/{idUser}")
+    public int getSurveyCountByParticipant(@PathVariable("idUser") Long idUser){
+        return surveyService.getCountSurveyByParticipant(idUser);
     }
 
 }

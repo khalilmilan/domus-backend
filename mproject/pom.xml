@@ -11,6 +11,7 @@
 	<groupId>com.mproject</groupId>
 	<artifactId>mproject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>mevent</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -193,7 +194,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>khalilmilan91/${project.artifactId}:s13</image>
+						<image>khalilmilan91/${project.artifactId}:s2</image>
 					</to>
 				</configuration>
 			</plugin>

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,5 +23,6 @@ public class UserDevice extends BaseEntity{
     private String uid;
     private String token;
     private Integer Status;
+    private LocalDateTime lastActive;
 
 }

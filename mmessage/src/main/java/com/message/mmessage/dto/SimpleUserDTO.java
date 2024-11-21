@@ -14,4 +14,6 @@ public class SimpleUserDTO {
     private String firstName;
     private String lastName;
     private String photo;
+    private String email;
+    private String gender;
 }

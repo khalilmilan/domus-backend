@@ -21,9 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ProjectUserController {
         private ProjectUserService projectUserService;
-        @GetMapping(value = "/lowel")
-        public String test(){
-                return "hi";
+        @GetMapping(value = "/health/readiness")
+        public ResponseEntity<String> test(){
+                return ResponseEntity.status(HttpStatus.OK).body("hi");
         }
         @PostMapping
         public ResponseEntity<ProjectUserDTO> saveProjectUser(@RequestBody ProjectUserDTO projectUserDto){
@@ -112,5 +112,6 @@ public class ProjectUserController {
         List<Long> getIdsProjectByParticipant(@PathVariable("idUser")Long idUser){
                 return projectUserService.getProjectByParticipant(idUser);
         }
+
 
 }

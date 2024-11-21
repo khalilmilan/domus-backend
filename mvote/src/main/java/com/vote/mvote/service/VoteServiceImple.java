@@ -1,10 +1,7 @@
 package com.vote.mvote.service;
 
-import com.vote.mvote.client.SurveyValueServiceClient;
-import com.vote.mvote.client.UserServiceClient;
-import com.vote.mvote.dto.SimpleUserDTO;
-import com.vote.mvote.dto.SurveyValueDTO;
-import com.vote.mvote.dto.VoteDTO;
+import com.vote.mvote.client.*;
+import com.vote.mvote.dto.*;
 import com.vote.mvote.exception.VoteException;
 import com.vote.mvote.model.Vote;
 import com.vote.mvote.repository.VoteRepository;
@@ -16,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -27,12 +25,31 @@ public class VoteServiceImple implements VoteService{
     private VoteRepository voteRepository;
     private UserServiceClient userServiceClient;
     private SurveyValueServiceClient surveyValueServiceClient;
+    private SurveyFeignClient surveyFeignClient;
+
+    private UserDeviceFeignClient userDeviceFeignClient;
+    private NotificationFeignClient notificationFeignClient;
     @Override
     public VoteDTO saveVote(VoteDTO voteDto) {
         Vote vote = VoteMapper.mapToVote(voteDto);
         vote.setCreatedAt(LocalDateTime.now());
         Vote savedVote = voteRepository.save(vote);
         VoteDTO savedVoteDto = VoteMapper.mapToVoteDto(savedVote);
+        SimpleSurveyDTO survey = surveyFeignClient.getSimpleSurvey(voteDto.getIdSurvey());
+
+        List<UserDeviceDTO> devices = userDeviceFeignClient.getDevice(survey.getIdUser());
+        for (UserDeviceDTO device:devices){
+            NotificationDTO notification = new NotificationDTO();
+            notification.setTitle("📝 New Vote Recorded");
+            notification.setDescription("new vote for Survey: "+survey.getTitle());
+            notification.setType(12);
+            notification.setToken(device.getToken());
+            notification.setBadgeCount(1);
+            notification.setIdReciver(survey.getIdUser());
+            notification.setImageUrl("https://images.unsplash.com/photo-1517423440428-a5a00ad493e8");
+            notification.setDate(new Date());
+            notificationFeignClient.saveNotification(notification);
+        }
         return savedVoteDto;
     }
 
